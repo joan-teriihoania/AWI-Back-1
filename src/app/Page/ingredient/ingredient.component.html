@@ -1,0 +1,43 @@
+
+<section>
+  <div class="container justify-content-xxl-center">
+    <button class="btn btn-primary " type="button" data-bs-target="#creerIngredient" data-bs-toggle="modal">Button</button>
+    <div id="accordion-1" class="accordion" role="tablist">
+      <div *ngFor="let item of category" class="accordion-item">
+        <h2 class="accordion-header" role="tab">
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id" >{{item.name}}</button></h2>
+        <div [attr.class]="'accordion-collapse collapse item-'+item.id" role="tabpanel" >
+          <div class="accordion-body">
+            <div >
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Unité</th>
+                    <th scope="col">Prix à l'unité</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item2 of ingredient">
+                    <td *ngIf="item.id==item2.id_category">{{item2.name}}</td>
+                    <td *ngIf="item.id==item2.id_category">{{item2.unit}}</td>
+                    <td *ngIf="item.id==item2.id_category">{{item2.unit_price}}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-modal-create-ingredient id="creerIngredient" class="modal fade" role="dialog" tabindex="-1" (newIngredient)="add($event)"></app-modal-create-ingredient>
+
+
+
+
+
+
