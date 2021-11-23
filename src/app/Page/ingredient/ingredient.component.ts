@@ -27,6 +27,14 @@ export class IngredientComponent implements OnInit {
   add(event:Ingredient){
     this.ingredient.push(event);
   }
+  delete(id:number|undefined){
+    if(id==undefined){
+
+    }else {
+      this.request.delete(id);
+    }
+
+  }
 
 
 

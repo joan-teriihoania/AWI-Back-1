@@ -58,4 +58,11 @@ export class IngredientService {
     })
     return res;
   }
+  delete(id:number){
+    let data={
+      id:id,
+    }
+    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe()
+
+  }
 }
