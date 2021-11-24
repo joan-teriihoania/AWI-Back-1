@@ -32,7 +32,7 @@ export class IngredientService {
     })
     return res;
   }
-  createIngredient(ingredient:Ingredient){
+  createIngredient(ingredient:Ingredient):number{
     let data={
       NAME:ingredient.name,
       UNIT:ingredient.unit,
@@ -40,8 +40,17 @@ export class IngredientService {
       ID_Category:ingredient.id_category
     }
     console.log(data);
-    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe()
-
+    let salut={ID:-1};
+    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe({
+      next:(res)=>{
+        salut=res as {ID:number};
+      },
+      error: (e) => {
+        console.error(e)
+      }
+      }
+    )
+    return salut.ID;
   }
   getIcategory(){
     let category = this.http.get<any>("http://localhost:8080/getICategory", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
@@ -62,7 +71,10 @@ export class IngredientService {
     let data={
       id:id,
     }
-    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe()
+    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe({
+      error: (e) => console.error(e)
+      }
+    )
 
   }
 }
