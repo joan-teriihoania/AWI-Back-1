@@ -5,6 +5,7 @@ import {Category} from "../../class/category";
 
 
 
+
 @Component({
   selector: 'app-ingredient',
   templateUrl: './ingredient.component.html',
@@ -31,7 +32,14 @@ export class IngredientComponent implements OnInit {
     if(id==undefined){
 
     }else {
-      this.request.delete(id);
+      this.request.delete(id).subscribe({
+          error: (e) => console.error(e),
+          complete:()=>{
+            console.log("Suppresion "+id)
+          }
+
+        }
+      )
     }
 
   }

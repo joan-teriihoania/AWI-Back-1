@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 import {Ingredient} from "../class/ingredient";
 import {Category} from "../class/category";
+import {Observable} from "rxjs";
 
 
 
@@ -67,14 +68,11 @@ export class IngredientService {
     })
     return res;
   }
-  delete(id:number){
+  delete(id:number):Observable<any>{
     let data={
-      id:id,
+      ID:id,
     }
-    this.http.post("http://localhost:8080/createIngredient",data,this.httpOptions).subscribe({
-      error: (e) => console.error(e)
-      }
-    )
+    return this.http.post("http://localhost:8080/deleteIngredient",data,this.httpOptions)
 
   }
 }
