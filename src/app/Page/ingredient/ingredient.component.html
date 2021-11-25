@@ -42,7 +42,8 @@
 </section>
 
 <app-modal-create-ingredient id="creerIngredient" class="modal fade" role="dialog" tabindex="-1" (newIngredient)="add($event)"></app-modal-create-ingredient>
-
+<button (click)="successAlert()">Ceux</button>
+<app-alert style="opacity: 0;" [@animation]="active?'show':'hidden'" [text]="text" [etat]="etat"></app-alert>
 
 
 

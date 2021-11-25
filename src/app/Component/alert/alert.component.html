@@ -1,11 +1,10 @@
 
-<button (click)="change()">close</button>
 
 
-<div  [@animation]="success" class="alert alert-success " role="alert">
-  A simple success alert—check it out!
+<div  [class]="'alert alert-fixed alert-'+etat " role="alert">
+  {{text}}
 </div>
-<div [@animation]="danger" class="alert alert-danger alert-fixed"  role="alert">
+<div  class="alert alert-danger "  role="alert">
   A simple danger alert—check it out!
 </div>
 
