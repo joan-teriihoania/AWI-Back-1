@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Ingredient} from "../../../class/ingredient";
 import {IngredientService} from "../../../Service/ingredient.service";
+import {Ingredient} from "../../../class/ingredient";
 
 @Component({
   selector: 'app-creer-recette',
@@ -8,24 +8,26 @@ import {IngredientService} from "../../../Service/ingredient.service";
   styleUrls: ['./creer-recette.component.css']
 })
 export class CreerRecetteComponent implements OnInit {
-  liste:Array<Ingredient>;
-  ingredientDonne:Array<Ingredient>;
+  ingredient:Array<Ingredient>
+
   constructor(private http:IngredientService) {
-    this.ingredientDonne=http.getAllIngredient();
-    this.liste=new Array<Ingredient>()
-
-
+    this.ingredient=http.getAllIngredient();
   }
 
   ngOnInit(): void {
   }
 
-  ajoutIngredient(){
-    this.liste.push(new Ingredient(0,"test","test",0,0))
-  }
-  deleteIngredient(item:Ingredient){
-    this.liste.splice(this.liste.indexOf(item),1)
+  createIngredient(event:Ingredient){
+    console.log(event)
+    if(event.id==-1 || event.id==undefined){
+
+
+    }else {
+      this.ingredient.push(event);
+    }
 
   }
+
+
 
 }

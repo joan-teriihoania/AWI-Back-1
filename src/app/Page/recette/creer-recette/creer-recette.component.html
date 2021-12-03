@@ -1,35 +1,32 @@
 
 
-<button class="btn btn-primary" type="button" data-bs-target="#creerEtape" data-bs-toggle="modal">Button</button>
+<button class="btn btn-primary" type="button" data-bs-target="#creerEtape" data-bs-toggle="modal">Creer une étape</button>
+<form style="padding: 12px;"><input class="form-control" type="text" placeholder="Nom" /><input class="form-control" type="text" placeholder="Description" /><input class="form-control" type="number" placeholder="Durée de l&#39;étape (en minute)" />
+  <div class="row" >
+    <div class="col">
+      <select class="form-select" >
 
-<div id="creerEtape" class="modal fade" role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Créer une étape</h4><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form style="padding: 12px;"><input class="form-control" type="text" placeholder="Nom" /><input class="form-control" type="text" placeholder="Description" /><input class="form-control" type="number" placeholder="Durée de l&#39;étape (en minute)" />
-          <div class="row" *ngFor="let item of liste">
-            <div class="col">
-              <select class="form-select" *ngFor="let item2 of ingredientDonne">
-                  <option [value]="item2.id">{{item2.name}}</option>
-              </select>
-            </div>
-            <div class="col">
-              <input class="form-control" type="text" placeholder="Quantité" />
-            </div>
-            <div class="col">
-              <button class="btn btn-primary" (click)="deleteIngredient(item)" type="button">Supprimer</button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col text-center"><button class="btn btn-primary" (click)="ajoutIngredient()" type="button"><i class="fa fa-plus"></i> Ajouter un ingrédient</button></div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer"><button class="btn btn-light" type="button">Créer un ingrédient</button><button class="btn btn-primary" type="button">Créer</button></div>
+          <ng-container >
+            <option  ></option>
+          </ng-container>
+
+      </select>
+    </div>
+    <div class="col">
+      <input class="form-control" type="text" placeholder="Quantité" />
+    </div>
+    <div class="col">
+      <button class="btn btn-outline-danger"  type="button">
+        Supprimer
+      </button>
+
     </div>
   </div>
-</div>
+  <div class="row">
+    <div class="col text-center"><button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Ajouter un ingrédient</button></div>
+  </div>
+</form>
+<app-modal-create-step id="creerEtape" [ingredientDonne]="ingredient" class="modal fade" role="dialog" tabindex="-1" ></app-modal-create-step>
+<app-modal-create-ingredient id="creerIngredient" class="modal fade" role="dialog" tabindex="-1" (newIngredient)="createIngredient($event)"></app-modal-create-ingredient>
+
 

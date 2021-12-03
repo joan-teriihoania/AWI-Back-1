@@ -10,10 +10,16 @@ const app = express();
 app.use(cors())
 
 
-const indexRouter = require(path.join(__dirname, "app/rout"));
+var ingredient = require(path.join(__dirname, "app/ingredient"));
+var step = require(path.join(__dirname, "app/step"));
+var category = require(path.join(__dirname, "app/category"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/', indexRouter); //localhost:3000/
+app.use('/', step);
+app.use('/ingredient', ingredient);
+app.use('/step', step);
+app.use('/category', category);
+
 /*
 // parse requests of content-type - application/json
 app.use(bodyParser.json());

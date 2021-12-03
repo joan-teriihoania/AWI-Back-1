@@ -13,6 +13,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { ModalCreateIngredientComponent } from './Component/modal-create-ingredient/modal-create-ingredient.component';
 import { AlertComponent } from './Component/alert/alert.component';
+import { ModalCreateStepComponent } from './Component/modal-create-step/modal-create-step.component';
+import { CreerRecetteComponent} from "./Page/recette/creer-recette/creer-recette.component";
+import { AllergenComponent } from './Page/allergen/allergen.component';
 
 
 @NgModule({
@@ -23,6 +26,9 @@ import { AlertComponent } from './Component/alert/alert.component';
     IngredientComponent,
     ModalCreateIngredientComponent,
     AlertComponent,
+    CreerRecetteComponent,
+    ModalCreateStepComponent,
+    AllergenComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +39,9 @@ import { AlertComponent } from './Component/alert/alert.component';
 
     RouterModule.forRoot([
       {path:"",component:AppComponent},
+      {path:"creerRecette",component:CreerRecetteComponent},
       {path:"ingredient",component:IngredientComponent},
+      {path:"allergen",component:AllergenComponent},
       {path:'**',component:ERR404Component}
 
     ])

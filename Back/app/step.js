@@ -1,16 +1,20 @@
 const express = require("express")
 const router = express.Router();
 const path = require("path");
-const modelIngredient=require(path.join(__dirname,"../../Back/app/models/Ingredient"))
-const modelCategory=require(path.join(__dirname,"../../Back/app/models/Category"))
+const modelStep=require(path.join(__dirname,"../../Back/app/models/Step"))
 
 
-router.post("/createIngredient",(req,res)=>{
+router.post("/createStep",(req,res)=>{
   console.log(req.body);
   data=req.body;
-  modelIngredient.createIngredient(data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category).then();
-  res.status(201).end();
-
+  modelStep.create(data.NAME,data.DESCRIPTION,data.DURATION,data.INGREDIENT).then((result)=>{
+      res.json({ID:result});
+      res.status(201).end();
+    }
+  ).catch((e)=>{
+    console.log(e);
+    res.status(400).end();
+  });
 })
 router.get("/getIngredient",(req,res)=>{
   modelIngredient.getAllIngredient().then((result)=>{
@@ -35,6 +39,4 @@ router.get("/getICategory",(req,res)=>{
     res.status(200).end();
   })
 })
-
-
 module.exports=router;

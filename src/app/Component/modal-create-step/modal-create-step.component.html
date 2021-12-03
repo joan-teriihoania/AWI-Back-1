@@ -1,0 +1,50 @@
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Créer une étape</h4><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form style="padding: 12px;" [formGroup]="form" (ngSubmit)="validate()">
+    <div class="modal-body">
+
+        <input class="form-control" type="text" formControlName="name" placeholder="Nom" />
+        <input class="form-control" type="text" formControlName="description" placeholder="Description" />
+        <input class="form-control" type="number" formControlName="duration" placeholder="Durée de l&#39;étape (en minute)" />
+        <div class="row" *ngFor="let item of liste">
+          <div class="col">
+            <select class="form-select" formControlName="{{item}}" >
+              <optgroup *ngFor="let category of i_Category"  label="{{category.name}}">
+                <ng-container *ngFor="let item2 of ingredientDonne">
+                  <option  *ngIf="category.id==item2.id_category" [value]="item2.id">{{item2.name}}</option>
+                </ng-container>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col">
+            <input class="form-control" formControlName="{{item}}Q" type="text" placeholder="Quantité" />
+          </div>
+          <div class="col">
+            <button class="btn btn-outline-danger" (click)="deleteIngredient(item)" type="button">
+              Supprimer
+            </button>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center"><button class="btn btn-primary" (click)="ajoutIngredient()" type="button"><i class="fa fa-plus"></i> Ajouter un ingrédient</button></div>
+        </div>
+
+
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-light"  data-bs-dismiss="modal"   data-bs-toggle="modal" href="#creerIngredient" type="button">Créer un ingrédient</button>
+      <button class="btn btn-primary" data-bs-toggle="modal" type="submit">Créer</button>
+    </div>
+    </form>
+
+
+  </div>
+</div>
+
+
