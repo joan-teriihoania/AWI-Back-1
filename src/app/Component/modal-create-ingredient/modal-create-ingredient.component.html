@@ -14,11 +14,30 @@
           <option value="" disabled selected>Catégorie</option>
           <option *ngFor="let item of category"  [ngValue]="item.id" >{{item.name}}</option>
         </select>
+          <div class="row" *ngFor="let item of liste">
+            <div class="col">
+              <select class="form-select" formControlName="{{item}}" >
+                  <ng-container *ngFor="let item of allergen">
+                    <option   [value]="item.id">{{item.name}} </option>
+                  </ng-container>
+
+              </select>
+            </div>
+            <div class="col">
+              <button class="btn btn-outline-danger align-content-center" (click)="deleteAllergen(item)" type="button">
+                Supprimer
+              </button>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col text-center"><button class="btn btn-primary" (click)="ajoutAllergen()" type="button"><i class="fa fa-plus"></i> Ajouter un allergène</button></div>
+          </div>
         </div>
         <div class="modal-footer"><button class="btn btn-primary" type="submit">Créer</button></div>
       </form>
   </div>
 </div>
 
-<app-alert style="opacity: 0;" [@animation]="active?'show':'hidden'" [text]="text" [etat]="etat"></app-alert>
+
 

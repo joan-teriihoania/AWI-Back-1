@@ -1,16 +1,20 @@
+import {Allergen} from "./allergen";
+
 export class Ingredient {
-  public id:number|null;
-  public name:string|null;
-  public unit:string|null;
-  public unit_price:number|null;
-  public id_category:number|null;
+  public id:number;
+  public name:string;
+  public unit:string;
+  public unit_price:number;
+  public id_category:number;
+  public allergen: Array<Allergen> | undefined;
 
 
-  constructor(id: number | null, name: string | null, unit: string | null, unit_price: number | null, id_category: number | null) {
+  constructor(id: number, name: string , unit: string, unit_price: number , id_category: number,allergen?:Array<Allergen>) {
     this.id = id;
     this.name = name;
     this.unit = unit;
     this.unit_price = unit_price;
     this.id_category = id_category;
+    this.allergen=allergen;
   }
 }

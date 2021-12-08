@@ -16,6 +16,7 @@ import { AlertComponent } from './Component/alert/alert.component';
 import { ModalCreateStepComponent } from './Component/modal-create-step/modal-create-step.component';
 import { CreerRecetteComponent} from "./Page/recette/creer-recette/creer-recette.component";
 import { AllergenComponent } from './Page/allergen/allergen.component';
+import { ModalCreateCategoryComponent } from './Component/modal-create-category/modal-create-category.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { AllergenComponent } from './Page/allergen/allergen.component';
     CreerRecetteComponent,
     ModalCreateStepComponent,
     AllergenComponent,
+    ModalCreateCategoryComponent,
   ],
   imports: [
     BrowserModule,

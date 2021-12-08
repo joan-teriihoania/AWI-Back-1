@@ -9,7 +9,7 @@ function create(name,unit,unit_price,id_Category){
         if (err) {
           reject(err);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM Ingredient",(err,result)=>{
+          db.query("SELECT LAST_INSERT_ID() AS ID FROM Ingredient; ",(err,result)=>{
             if (err) {
               reject(err);
             } else {

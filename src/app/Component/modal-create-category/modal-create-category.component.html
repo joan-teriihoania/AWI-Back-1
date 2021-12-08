@@ -1,0 +1,19 @@
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Créer une catégorie de {{type}}</h4><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="validate()">
+      <div class="modal-body">
+        <input class="form-control" type="text" formControlName="name"  placeholder="Nom" />
+        <input class="form-control" type="text" formControlName="url" placeholder="Unité" />
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary" type="submit">Créer</button></div>
+    </form>
+  </div>
+</div>
+
+
+

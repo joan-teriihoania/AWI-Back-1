@@ -15,7 +15,7 @@ export class AllergenComponent implements OnInit {
 
   constructor(private request:AllergenService) {
     this.category=request.getAcategory();
-    this.allergen=request.getAll();
+    this.allergen=request.getAllAllergen();
 
 
 
@@ -23,36 +23,15 @@ export class AllergenComponent implements OnInit {
   ngOnInit(): void {
 
   }
-  add(event:Allergen){
-    if(event.id==-1 || event.id==undefined){
 
-    }else {
-      this.allergen.push(event);
-    }
+  modify(item:Allergen){
+
   }
-  delete(item:Allergen|undefined){
-    if(item==undefined){
+  delete(item:Allergen){
 
-    }else {
-      if(item.id==undefined){
-
-      }else {
-        this.request.delete(item.id).subscribe({
-            error: (e) => {
-              console.error(e)
-            },
-            complete:()=>{
-              console.log("Suppresion "+item.id)
-              this.allergen.splice(this.allergen.indexOf(item),1)
-            }
-
-          }
-        )
-
-      }
-
-    }
-
+  }
+  add(category:Category){
+    this.category.push(category)
   }
 
 }

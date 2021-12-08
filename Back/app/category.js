@@ -27,6 +27,24 @@ router.get("/getRCategory",(req,res)=>{
     res.status(200).end();
   })
 })
+router.post("/createACategory",(req,res)=>{
+  modelCategory.createCategory("A_Category",req.body.NAME,req.body.URL).then((result)=>{
+    res.json(JSON.parse(JSON.stringify(result))[0]);
+    res.status(201).end();
+  }).catch((e)=>{
+    console.log(e);
+    res.status(400).end();
+  });
+})
+router.post("/createICategory",(req,res)=>{
+  modelCategory.createCategory("I_Category",req.body.NAME,req.body.URL).then((result)=>{
+    res.json(JSON.parse(JSON.stringify(result))[0]);
+    res.status(201).end();
+  }).catch((e)=>{
+    console.log(e);
+    res.status(400).end();
+  });
+})
 
 
 module.exports=router;

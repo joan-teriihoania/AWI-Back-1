@@ -1,41 +1,31 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewContainerRef} from '@angular/core';
 import {Category} from "../../class/category";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {IngredientService} from "../../Service/ingredient.service";
 import {Ingredient} from "../../class/ingredient";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+
+import {Allergen} from "../../class/allergen";
+import {AllergenService} from "../../Service/allergen.service";
+import {AlertComponent} from "../alert/alert.component";
 
 @Component({
   selector: 'app-modal-create-ingredient',
   templateUrl: './modal-create-ingredient.component.html',
   styleUrls: ['./modal-create-ingredient.component.css'],
-  animations: [
-    trigger('animation', [
-      // ...
-      state('show', style({
-        opacity: 1,
-      })),
-      state('hidden', style({
-        opacity: 0,
-      })),
-      transition('show => hidden', [
-        animate('1s')
-      ]),
-    ]),
-  ],
 })
 export class ModalCreateIngredientComponent implements OnInit {
+  @Input()category: Array<Category>;
   @Output() newIngredient:EventEmitter<Ingredient>
-  category: Array<Category>;
   form:FormGroup;
   fb:FormBuilder;
-  active:boolean;
-  text:string;
-  etat:string;
+  allergen:Array<Allergen>;
+  liste:Array<number>;
+  cpt=0;
 
-
-  constructor(private request:IngredientService) {
-    this.category=request.getIcategory();
+  constructor(private requestI:IngredientService,private requestA:AllergenService,public viewContainerRef: ViewContainerRef) {
+    this.category=requestI.getIcategory();
+    this.allergen=requestA.getAllAllergen();
+    this.liste=new Array<number>()
     this.fb=new FormBuilder()
     this.newIngredient=new EventEmitter<Ingredient>();
     this.form=this.fb.group({
@@ -45,35 +35,43 @@ export class ModalCreateIngredientComponent implements OnInit {
       id:[""]
     });
 
-    this.active=false;
-    this.text="";
-    this.etat="";
-
   }
 
   ngOnInit(): void {
 
   }
+  ajoutAllergen(){
+    this.form.addControl(this.cpt.toString(),new FormControl(""));
+    this.form.addControl(this.cpt.toString()+"Q",new FormControl(""));
+    this.liste.push(this.cpt)
+    this.cpt++;
+  }
+  deleteAllergen(item:number){
+    this.liste.splice(this.liste.indexOf(item),1)
+    this.form.removeControl(item.toString())
+    this.form.removeControl(item.toString()+"Q");
+  }
+
   alert(text:string ,etat:string){
-    this.text=text;
-    this.etat=etat;
-    this.active=true;
-    setTimeout(() => this.active=false, 1000);
+    this.viewContainerRef.clear();
+    const alert=this.viewContainerRef.createComponent<AlertComponent>(AlertComponent)
+    alert.instance.etat=etat;
+    alert.instance.text=text;
 
   }
+  // TODO gérer l'ajouts d'Allergène
   validate(){
-    var ingre=new Ingredient(0,this.form.get("name")?.value,this.form.get("unit")?.value,this.form.get("unit_price")?.value,this.form.get("id")?.value);
-    this.request.createIngredient(ingre).subscribe({
+    var ingredient=new Ingredient(0,this.form.get("name")?.value,this.form.get("unit")?.value,this.form.get("unit_price")?.value,this.form.get("id")?.value);
+    this.requestI.createIngredient(ingredient).subscribe({
       next: (res) => {
-        ingre.id=(res as {ID:number}).ID;
-        this.alert("Ingrédient "+ingre.name+" créer","success");
-        this.newIngredient.emit(ingre);
+        ingredient.id=(res as {ID:number}).ID;
+        this.alert("Ingrédient "+ingredient.name+" créer","success");
+        this.newIngredient.emit(ingredient);
       },
       error: (e) => {
         console.error(e)
-        ingre.id=-1;
         this.alert("Erreur pour la création d'ingrédient","danger");
-        this.newIngredient.emit(ingre);
+
       }
     })
   }

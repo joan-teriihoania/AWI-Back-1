@@ -1,4 +1,4 @@
-<div class="alert-fixed">
+<div  [@animation]="active?'show':'hidden'" class="alert-fixed">
   <div  [class]="'alert centrer alert-'+etat " role="alert">
     {{text}}
   </div>

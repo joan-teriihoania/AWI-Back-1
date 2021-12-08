@@ -1,11 +1,12 @@
 
 <section>
   <div class="container justify-content-xxl-center">
-    <button class="btn btn-primary " type="button" data-bs-target="#creerIngredient" data-bs-toggle="modal">Button</button>
+    <button class="btn btn-primary " type="button" data-bs-target="#creerAcategory" data-bs-toggle="modal">Button</button>
+    <button class="btn btn-primary " type="button" data-bs-target="#creerAllergen" data-bs-toggle="modal">Button</button>
     <div id="accordion-1" class="accordion" role="tablist">
       <div *ngFor="let item of category" class="accordion-item">
         <h2 class="accordion-header" role="tab">
-          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id" >{{item.name}}</button></h2>
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id"><img [src]="item.url"/> {{item.name}}</button></h2>
         <div [attr.class]="'accordion-collapse collapse item-'+item.id" role="tabpanel" >
           <div class="accordion-body">
             <div >
@@ -13,14 +14,13 @@
                 <thead>
                 <tr>
                   <th scope="col">Name</th>
-                  <th scope="col">Unité</th>
-                  <th scope="col">Prix à l'unité</th>
+                  <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item2 of allergen">
-                  <td *ngIf="item.id==item2.ID_Category">{{item2.name}}</td>
-                  <td *ngIf="item.id==item2.ID_Category">
+                <tr *ngFor="let item2 of allergen" [@outIngredient]="item.id==item2.id_category?'in':'out'">
+                  <td *ngIf="item.id==item2.id_category">{{item2.name}}</td>
+                  <td *ngIf="item.id==item2.id_category">
                     <button class="btn btn-outline-danger" (click)="delete(item2)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -28,7 +28,6 @@
                     </button>
                   </td>
                 </tr>
-
                 </tbody>
               </table>
             </div>
@@ -38,3 +37,4 @@
     </div>
   </div>
 </section>
+<app-modal-create-category type="Allergen" id="creerAcategory" class="modal fade" role="dialog" tabindex="-1" (newCategory)="add($event)"></app-modal-create-category>

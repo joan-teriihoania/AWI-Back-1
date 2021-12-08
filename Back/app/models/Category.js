@@ -2,14 +2,21 @@ const path = require('path');
 const db =require(path.join(__dirname, '../../../Back/BDD'));
 
 //Valeur possible A_Category I_Category R_Category
-function createCategory(category,nom){
+function createCategory(category,nom,url){
   return new Promise((resolve,reject) =>{
-      let sql="INSERT INTO "+category+" (NAME) VALUES (?);";
-      db.query(sql,[nom],(err,result)=>{
+      let sql="INSERT INTO "+category+" (NAME,URL) VALUES (?,?);";
+      db.query(sql,[nom,url],(err,result)=>{
         if (err) {
           reject(err);
         } else {
-          resolve(result);
+          db.query("SELECT LAST_INSERT_ID() AS ID FROM "+category+";",(err,result)=>{
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          })
+
         }
       })
     }

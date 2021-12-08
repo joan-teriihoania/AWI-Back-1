@@ -1,5 +1,6 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
+
 
 
 
@@ -7,13 +8,28 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.css']
+  styleUrls: ['./alert.component.css'],
+  animations: [
+    trigger('animation', [
+      // ...
+      state('show', style({
+        opacity: 1,
+      })),
+      state('hidden', style({
+        opacity: 0,
+      })),
+      transition('show => hidden', [
+        animate('1s')
+      ]),
+    ]),
+  ],
 
 })
 
 export class AlertComponent implements OnInit {
-  @Input() etat:string|undefined;
-  @Input() text:string|undefined;
+  etat:string|undefined;
+  text:string|undefined;
+  active=false;
 
   constructor() {
     if (this.etat==undefined){
@@ -24,11 +40,20 @@ export class AlertComponent implements OnInit {
     }
   }
 
+  alert(){
+    setTimeout(() => {
+      this.active=false;
 
-  ngOnInit(): void {
+    }, 1000);
 
   }
 
+
+  ngOnInit(): void {
+    this.active = true;
+    this.alert();
+
+  }
 
 
 }

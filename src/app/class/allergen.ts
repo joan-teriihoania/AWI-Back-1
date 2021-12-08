@@ -1,13 +1,11 @@
 export class Allergen {
-  id:number|null;
-  name:string|null;
-  ID_Category:number|null;
-  icon:string|null;
+  id:number;
+  name:string;
+  id_category:number;
 
-  constructor(id: number | null, name: string | null, ID_Category: number | null, icon: string | null) {
+  constructor(id: number , name: string ,id_category:number) {
     this.id = id;
     this.name = name;
-    this.ID_Category = ID_Category;
-    this.icon = icon;
+    this.id_category=id_category;
   }
 }

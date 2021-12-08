@@ -32,11 +32,5 @@ router.post("/deleteIngredient",(req,res)=>{
   res.status(200).end();
 
 })
-router.get("/getICategory",(req,res)=>{
-  modelCategory.getCategory("I_Category").then((result)=>{
-    console.log(JSON.parse(JSON.stringify(result)))
-    res.json(JSON.parse(JSON.stringify(result)));
-    res.status(200).end();
-  })
-})
+
 module.exports=router;
