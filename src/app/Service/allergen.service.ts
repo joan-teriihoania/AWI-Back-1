@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Ingredient} from "../class/ingredient";
 import {Observable} from "rxjs";
 import {Category} from "../class/category";
 import {Allergen} from "../class/allergen";

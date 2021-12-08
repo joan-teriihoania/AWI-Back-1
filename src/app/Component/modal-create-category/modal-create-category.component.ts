@@ -1,8 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewContainerRef} from '@angular/core';
-import {Ingredient} from "../../class/ingredient";
+import {Component, EventEmitter, Input, Output, ViewContainerRef} from '@angular/core';
 import {Category} from "../../class/category";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {Allergen} from "../../class/allergen";
 import {IngredientService} from "../../Service/ingredient.service";
 import {AllergenService} from "../../Service/allergen.service";
 import {AlertComponent} from "../alert/alert.component";
