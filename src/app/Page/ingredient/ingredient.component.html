@@ -6,7 +6,7 @@
     <div id="accordion-1" class="accordion" role="tablist">
       <div *ngFor="let item of category" class="accordion-item">
         <h2 class="accordion-header" role="tab">
-          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id" ><img width="16" height="16" src="{{item.url}}"/> {{item.name}}</button></h2>
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id" >{{item.name}}</button></h2>
         <div [attr.class]="'accordion-collapse collapse item-'+item.id" role="tabpanel" >
           <div class="accordion-body">
             <div >
@@ -16,6 +16,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Unité</th>
                     <th scope="col">Prix à l'unité</th>
+                    <th scope="col">Stocks</th>
                     <th scope="col">Allergène</th>
                   </tr>
                 </thead>
@@ -24,9 +25,13 @@
                     <td *ngIf="item.id==item2.id_category">{{item2.name}}</td>
                     <td *ngIf="item.id==item2.id_category">{{item2.unit}}</td>
                     <td *ngIf="item.id==item2.id_category">{{item2.unit_price}}</td>
-                    <td *ngIf="item.id==item2.id_category"></td>
+                    <td *ngIf="item.id==item2.id_category">{{item2.stock}}</td>
+                    <td *ngIf="item.id==item2.id_category" >
+                      <mat-icon  *ngIf="item2.allergen!=undefined" matTooltip="{{item2.allergen.name}}"><img   height="38" [src]="item2.allergen.url"/> </mat-icon>
+                      <ng-container *ngIf="item2.allergen==undefined">Pas d'allergène</ng-container>
+                    </td>
                     <td *ngIf="item.id==item2.id_category">
-                      <button class="btn btn-outline-primary" (click)="delete(item2)">
+                      <button class="btn btn-outline-primary" data-bs-target="#updateIngredient" data-bs-toggle="modal" (click)="updateIngredient(item2)">
                         <svg id="" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#0d6efd"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                       </button>
                       <button class="btn btn-outline-danger" (click)="delete(item2)">
@@ -45,11 +50,11 @@
   </div>
 </section>
 
-<app-modal-create-ingredient id="creerIngredient" class="modal fade" role="dialog" tabindex="-1" [category]="category" (newIngredient)="addIngredient($event)"></app-modal-create-ingredient>
+<app-modal-create-ingredient id="creerIngredient"  class="modal fade" role="dialog" tabindex="-1" [category]="category" (newIngredient)="addIngredient($event)"></app-modal-create-ingredient>
 <app-modal-create-category type="Ingrédient" id="creerIcategory" class="modal fade" role="dialog" tabindex="-1" (newCategory)="addCategory($event)"></app-modal-create-category>
 
 
-
+<app-modal-create-ingredient id="updateIngredient" [updateModal]="true" class="modal fade" role="dialog" tabindex="-1"  [inputIngredient]="selectedIngredient" [category]="category" (newIngredient)="updateEmitIngredient($event)"></app-modal-create-ingredient>
 
 
 

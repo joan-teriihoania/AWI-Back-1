@@ -13,12 +13,14 @@ app.use(cors())
 var ingredient = require(path.join(__dirname, "app/ingredient"));
 var step = require(path.join(__dirname, "app/step"));
 var category = require(path.join(__dirname, "app/category"));
+var allergen= require(path.join(__dirname, "app/allergen"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', step);
 app.use('/ingredient', ingredient);
 app.use('/step', step);
 app.use('/category', category);
+app.use('/allergen',allergen);
 
 /*
 // parse requests of content-type - application/json

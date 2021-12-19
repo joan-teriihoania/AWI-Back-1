@@ -1,12 +1,12 @@
 
 <section>
   <div class="container justify-content-xxl-center">
-    <button class="btn btn-primary " type="button" data-bs-target="#creerAcategory" data-bs-toggle="modal">Button</button>
-    <button class="btn btn-primary " type="button" data-bs-target="#creerAllergen" data-bs-toggle="modal">Button</button>
+    <button class="btn btn-primary " type="button" data-bs-target="#creerAcategory" data-bs-toggle="modal">Créer une catégorie d'allergène</button>
+    <button class="btn btn-primary " type="button" data-bs-target="#creerAllergen" data-bs-toggle="modal">Créer un allergène</button>
     <div id="accordion-1" class="accordion" role="tablist">
       <div *ngFor="let item of category" class="accordion-item">
         <h2 class="accordion-header" role="tab">
-          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id"><img [src]="item.url"/> {{item.name}}</button></h2>
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#accordion-1 .item-'+item.id" aria-expanded="false" [attr.aria-controls]="'accordion-1 .item-'+item.id"><img height="30" *ngIf="item.url!=null" src="{{item.url}}"/>{{item.name}}</button></h2>
         <div [attr.class]="'accordion-collapse collapse item-'+item.id" role="tabpanel" >
           <div class="accordion-body">
             <div >
@@ -37,4 +37,6 @@
     </div>
   </div>
 </section>
-<app-modal-create-category type="Allergen" id="creerAcategory" class="modal fade" role="dialog" tabindex="-1" (newCategory)="add($event)"></app-modal-create-category>
+<app-modal-create-allergen class="modal fade" id="creerAllergen" role="dialog" tabindex="-1" (newAllergen)="addA($event)" [category]="category"></app-modal-create-allergen>
+<app-modal-create-category type="Allergène" id="creerAcategory" class="modal fade" role="dialog" tabindex="-1" (newCategory)="addC($event)"></app-modal-create-category>
+

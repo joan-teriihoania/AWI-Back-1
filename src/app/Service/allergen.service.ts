@@ -21,7 +21,7 @@ export class AllergenService {
     allAllergen.subscribe({
       next: (data) => {
         for(let d of data){
-          res.push(new Allergen(d.ID_ALLERGENE,d.NAME,d.ID_Category));
+          res.push(new Allergen(d.ID_ALLERGEN,d.NAME,d.ID_Category));
         }
       },
       error: (e) => console.error(e)
@@ -32,24 +32,11 @@ export class AllergenService {
   createAllergen(allergen:Allergen):Observable<any>{
     let data={
       NAME:allergen.name,
+      ID_Category: allergen.id_category
     }
-    return this.http.post("http://localhost:8080/allergen/create",data,this.httpOptions);
+    return this.http.post("http://localhost:8080/allergen/createAllergen",data,this.httpOptions);
   }
 
-  //TODO à compléter
-  getAcategory(){
-    let category = this.http.get<any>("http://localhost:8080/category/getACategory", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
-    let res: Array<Category>=new Array<Category>();
-    category.subscribe({
-      next: (data) => {
-        for(let d of data){
-          res.push(new Category(d.ID_Category,d.NAME));
-        }
-      },
-      error: (e) => console.error(e)
-    })
-    return res;
-  }
 
   createCategory(category:Category):Observable<any>{
     let data={
@@ -66,7 +53,20 @@ export class AllergenService {
       ID:id,
     }
     return this.http.post("http://localhost:8080/allergen/deleteAllergen",data,this.httpOptions)
-
+  }
+  //TODO à compléter
+  getAcategory(){
+    let category = this.http.get<any>("http://localhost:8080/category/getACategory", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
+    let res: Array<Category>=new Array<Category>();
+    category.subscribe({
+      next: (data) => {
+        for(let d of data){
+          res.push(new Category(d.ID_Category,d.NAME,d.URL));
+        }
+      },
+      error: (e) => console.error(e)
+    })
+    return res;
   }
 }
 

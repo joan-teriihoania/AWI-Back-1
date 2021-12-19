@@ -8,8 +8,20 @@ const modelCategory=require(path.join(__dirname,"../../Back/app/models/Category"
 router.post("/createIngredient",(req,res)=>{
   console.log(req.body);
   data=req.body;
-  modelIngredient.create(data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category).then((result)=>{
-      res.json(JSON.parse(JSON.stringify(result))[0]);
+  modelIngredient.create([data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category,data.STOCK,data.ALLERGEN]).then((result)=>{
+      res.json({ID:result});
+      res.status(201).end();
+    }
+  ).catch((e)=>{
+    console.log(e);
+    res.status(400).end();
+  });
+})
+router.post("/updateIngredient",(req,res)=>{
+
+  data=req.body;
+  modelIngredient.update([data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category,data.STOCK,data.ALLERGEN,data.ID]).then((result)=>{
+      res.json({ID:result});
       res.status(201).end();
     }
   ).catch((e)=>{

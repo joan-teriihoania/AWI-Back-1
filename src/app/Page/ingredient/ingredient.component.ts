@@ -8,6 +8,8 @@ import {AlertComponent} from "../../Component/alert/alert.component";
 
 
 
+
+
 @Component({
   selector: 'app-ingredient',
   templateUrl: './ingredient.component.html',
@@ -26,8 +28,8 @@ import {AlertComponent} from "../../Component/alert/alert.component";
 })
 export class IngredientComponent implements OnInit {
   category: Array<Category>;
-  ingredient:Array<Ingredient>
-
+  ingredient:Array<Ingredient>;
+  selectedIngredient:Ingredient|undefined;
 
 
   constructor(private request:IngredientService,public viewContainerRef: ViewContainerRef) {
@@ -35,14 +37,11 @@ export class IngredientComponent implements OnInit {
     this.ingredient=request.getAllIngredient();
 
 
-
   }
 
   ngOnInit(): void {
 
   }
-
-
 
   addIngredient(event:Ingredient){
     this.ingredient.push(event);
@@ -56,6 +55,12 @@ export class IngredientComponent implements OnInit {
     alert.instance.etat=etat;
     alert.instance.text=text;
 
+  }
+  updateIngredient(item:Ingredient){
+    this.selectedIngredient=item;
+  }
+  updateEmitIngredient(ingredient:Ingredient){
+    this.ingredient=this.request.getAllIngredient();
   }
 
   delete(item:Ingredient|undefined){
@@ -82,9 +87,4 @@ export class IngredientComponent implements OnInit {
     }
 
   }
-
-
-
-
-
 }
