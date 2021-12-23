@@ -129,12 +129,4 @@ export class IngredientService {
     }
     return this.http.post("http://localhost:8080/category/createICategory",data,this.httpOptions);
   }
-  attributAllergen(ingredientlist:Array<Ingredient>,allergenList:Array<Allergen>):Array<Ingredient>{
-    let list:Array<Ingredient> = new Array<Ingredient>();
-    ingredientlist.forEach(((value, index) => {
-      allergenList
-    }))
-
-    return list
-  }
 }

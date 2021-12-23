@@ -16,7 +16,7 @@ import {AlertComponent} from "../alert/alert.component";
   templateUrl: './modal-create-ingredient.component.html',
   styleUrls: ['./modal-create-ingredient.component.css'],
 })
-export class ModalCreateIngredientComponent implements OnInit, OnChanges {
+export class ModalCreateIngredientComponent implements  OnChanges {
   @Input() category: Array<Category>;
   @Input() inputIngredient: Ingredient | undefined;
   @Input() updateModal:boolean=false;
@@ -26,22 +26,19 @@ export class ModalCreateIngredientComponent implements OnInit, OnChanges {
   form: FormGroup=this.fb.group({
     name: ["",[Validators.required]],
     unit: ["",[Validators.required]],
-    unit_price: ["",[Validators.required]],
-    stock: ["",[Validators.required]],
+    unit_price: ["",[Validators.required,Validators.min(0)]],
+    stock: ["",[Validators.required,Validators.min(0)]],
     id: ["",[Validators.required]],
     allergen: [""]
   });
   allergenList: Array<Allergen>;
-  liste: Array<number>;
-  cpt = 0;
   selectAllergen: FormControl;
+
 
   constructor(private requestI: IngredientService, private requestA: AllergenService, public viewContainerRef: ViewContainerRef) {
     this.category = requestI.getIcategory();
     this.allergenList = requestA.getAllAllergen();
-    console.log(this.allergenList);
     this.selectAllergen = new FormControl();
-    this.liste = new Array<number>()
     this.newIngredient = new EventEmitter<Ingredient>();
 
   }
@@ -56,24 +53,22 @@ export class ModalCreateIngredientComponent implements OnInit, OnChanges {
       if(this.inputIngredient.allergen!=undefined){
         this.form.get("allergen")?.setValue(this.inputIngredient.allergen.id)
       }
-      console.log(this.inputIngredient)
     }
   }
 
-  ngOnInit(): void {
 
-  }/*
-  ajoutAllergen(){
-    this.form.addControl(this.cpt.toString(),new FormControl(""));
-    this.form.addControl(this.cpt.toString()+"Q",new FormControl(""));
-    this.liste.push(this.cpt)
-    this.cpt++;
+  getUnit(){
+    return this.form.get("unit")!;
   }
-  deleteAllergen(item:number){
-    this.liste.splice(this.liste.indexOf(item),1)
-    this.form.removeControl(item.toString())
-    this.form.removeControl(item.toString()+"Q");
-  }*/
+  getValidform(input:string){
+    if(this.form.get(input)!.untouched){
+      return ""
+    }else {
+      return this.form.get(input)!.valid?"is-valid":"is-invalid";
+
+    }
+
+  }
 
   alert(text:string ,etat:string){
     this.viewContainerRef.clear();
@@ -81,7 +76,7 @@ export class ModalCreateIngredientComponent implements OnInit, OnChanges {
     alert.instance.etat=etat;
     alert.instance.text=text;
   }
-  // TODO gérer l'ajouts d'Allergène
+
   validate(){
     let allergenValue:Allergen|undefined=undefined;
     this.allergenList.forEach((allergen)=>{
@@ -89,7 +84,8 @@ export class ModalCreateIngredientComponent implements OnInit, OnChanges {
         allergenValue=allergen
       }
     })
-    var ingredient=new Ingredient(0,this.form.get("name")?.value,this.form.get("unit")?.value,this.form.get("unit_price")?.value,this.form.get("id")?.value,0,allergenValue);
+    var ingredient=new Ingredient(0,this.form.get("name")?.value,this.form.get("unit")?.value,this.form.get("unit_price")?.value,this.form.get("id")?.value,this.form.get("stock")?.value,allergenValue);
+    console.log(ingredient);
     if(this.updateModal==false){
       this.requestI.createIngredient(ingredient).subscribe({
         next: (res) => {

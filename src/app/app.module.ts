@@ -22,6 +22,12 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {StepComponent} from './Page/step/step.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatInputModule} from "@angular/material/input";
+import { TableComponent } from './Component/table/table.component';
+import {MatTabsModule} from "@angular/material/tabs";
+
+
 
 
 @NgModule({
@@ -37,28 +43,32 @@ import {StepComponent} from './Page/step/step.component';
     AllergenComponent,
     ModalCreateCategoryComponent,
     ModalCreateAllergenComponent,
-    StepComponent
+    StepComponent,
+    TableComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
 
-    RouterModule.forRoot([
-      {path: "", component: AppComponent},
-      {path: "creerRecette", component: CreerRecetteComponent},
-      {path: "ingredient", component: IngredientComponent},
-      {path: "step", component: StepComponent},
-      {path: "allergen", component: AllergenComponent},
-      {path: '**', component: ERR404Component}
+        RouterModule.forRoot([
+            {path: "", component: AppComponent},
+            {path: "creerRecette", component: CreerRecetteComponent},
+            {path: "ingredient", component: IngredientComponent},
+            {path: "step", component: StepComponent},
+            {path: "allergen", component: AllergenComponent},
+            {path: '**', component: ERR404Component}
 
-    ]),
-    MatSelectModule,
-    MatIconModule,
-    MatTooltipModule,
-  ],
+        ]),
+        MatSelectModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatTableModule,
+        MatInputModule,
+        MatTabsModule,
+    ],
   providers: [],
   bootstrap: [RootComponent]
 })

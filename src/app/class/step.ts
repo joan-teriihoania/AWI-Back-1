@@ -1,14 +1,14 @@
 import {Ingredient} from "./ingredient";
 
 export class Step {
-  public id:number|null;
-  public name:string|null;
-  public description:string|null;
-  public duration:number|null;
-  public ingredient:Map<Ingredient,number>|null;
+  public id:number;
+  public name:string;
+  public description:string;
+  public duration:number;
+  public ingredient:Map<Ingredient,number>|Map<number,number>;
 
 
-  constructor(id: number | null,name:string|null, description: string | null, duration: number | null, ingredient: Map<Ingredient, number> | null) {
+  constructor(id: number,name:string, description: string , duration: number , ingredient: Map<Ingredient,number>|Map<number,number>) {
     this.id = id;
     this.name=name;
     this.description = description;

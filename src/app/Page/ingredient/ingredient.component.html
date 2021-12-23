@@ -14,8 +14,8 @@
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Unité</th>
                     <th scope="col">Prix à l'unité</th>
+                    <th scope="col">Unité</th>
                     <th scope="col">Stocks</th>
                     <th scope="col">Allergène</th>
                   </tr>
@@ -23,8 +23,8 @@
                 <tbody>
                   <tr *ngFor="let item2 of ingredient" [@outIngredient]="item.id==item2.id_category?'in':'out'">
                     <td *ngIf="item.id==item2.id_category">{{item2.name}}</td>
+                    <td *ngIf="item.id==item2.id_category">{{item2.unit_price}} €</td>
                     <td *ngIf="item.id==item2.id_category">{{item2.unit}}</td>
-                    <td *ngIf="item.id==item2.id_category">{{item2.unit_price}}</td>
                     <td *ngIf="item.id==item2.id_category">{{item2.stock}}</td>
                     <td *ngIf="item.id==item2.id_category" >
                       <mat-icon  *ngIf="item2.allergen!=undefined" matTooltip="{{item2.allergen.name}}"><img   height="38" [src]="item2.allergen.url"/> </mat-icon>

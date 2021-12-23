@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Step} from "../class/step";
 import {Ingredient} from "../class/ingredient";
+import {Allergen} from "../class/allergen";
 
 @Injectable({
   providedIn: 'root'
@@ -12,38 +13,79 @@ export class StepService {
   constructor(private http: HttpClient) {
 
   }
-  createStep(step:Step){
-    var data={
-      NAME:step.name,
-      DESCRIPTION:step.description,
-      DURATION:step.duration,
-      INGREDIENT:([] as Array<{ID:number|null,QUANTITY:number|null}>)
+  createStep(step:Step) {
+    var data = {
+      NAME: step.name,
+      DESCRIPTION: step.description,
+      DURATION: step.duration,
+      INGREDIENT: ([] as Array<{ ID: number | null, QUANTITY: number | null }>)
     }
-    step.ingredient?.forEach((value, key) => {
-      data.INGREDIENT.push({
-        ID:key.id,
-        QUANTITY:value,
-      });
+    step.ingredient.forEach((value, key) => {
+      if (key instanceof Ingredient) {
+        data.INGREDIENT.push({
+          ID: key.id,
+          QUANTITY: value,
+        });
+      } else {
+        data.INGREDIENT.push({
+          ID: key,
+          QUANTITY: value,
+        });
+
+      }
     })
     console.log(data);
-
-    return this.http.post("http://localhost:8080/ingredient/createIngredient",data,this.httpOptions);
+    return this.http.post("http://localhost:8080/step/createStep", data, this.httpOptions);
 
   }
-  //TODO à Finir
-  getAllStep(){
+  updateStep(id:number,step:Step){
+    var data = {
+      ID:id,
+      NAME: step.name,
+      DESCRIPTION: step.description,
+      DURATION: step.duration,
+      INGREDIENT: ([] as Array<{ ID: number | null, QUANTITY: number | null }>)
+    }
+    step.ingredient.forEach((value, key) => {
+      if (key instanceof Ingredient) {
+        data.INGREDIENT.push({
+          ID: key.id,
+          QUANTITY: value,
+        });
+      } else {
+        data.INGREDIENT.push({
+          ID: key,
+          QUANTITY: value,
+        });
+
+      }
+    })
+    return this.http.post("http://localhost:8080/step/updateStep", data, this.httpOptions);
+
+  }
+  getAllStep() {
     let allStep = this.http.get<any>("http://localhost:8080/step/getStep", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
     let res: Array<Step>=new Array<Step>();
+
     allStep.subscribe({
       next: (data) => {
         for(let d of data){
-          res.push(new Step(d.ID_INGREDIENT,d.NAME,d.UNIT,d.UNIT_PRICE,d.ID_Category));
-
+          let ingredientMap=new Map<Ingredient,number>()
+          for (let ingredient of d.INGREDIENT){
+            if(ingredient.ALLERGEN.ID==null){
+              ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK),ingredient.QUANTITY)
+            }else {
+              ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK,
+                new Allergen(ingredient.ALLERGEN.ID,ingredient.ALLERGEN.NAME,ingredient.ALLERGEN.ID_Category,ingredient.ALLERGEN.URL)),ingredient.QUANTITY)
+            }
+          }
+          res.push(new Step(d.ID_STEP,d.NAME,d.DESCRIPTION,d.DURATION,ingredientMap));
         }
       },
-      error: (e) => console.error(e)
+      error: (e) => console.log(e)
     })
     return res;
   }
+
 
 }

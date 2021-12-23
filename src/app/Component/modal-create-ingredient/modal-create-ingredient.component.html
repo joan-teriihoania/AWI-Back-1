@@ -5,16 +5,39 @@
       <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="validate()">
+    <form [formGroup]="form" (ngSubmit)="validate()" >
       <div class="modal-body" >
-        <input class="form-control" type="text" formControlName="name" placeholder="Nom" />
-        <input class="form-control" type="text" formControlName="unit" placeholder="Unité"/>
-        <input class="form-control" type="number" formControlName="unit_price" placeholder="Prix à l&#39;unité"/>
-        <input class="form-control" type="number" formControlName="stock" placeholder="Stocks"/>
-        <select class="form-select" formControlName="id">
+        <input class="form-control" type="text"  [ngClass]="getValidform('name')" formControlName="name"  placeholder="Nom" />
+        <div  class="invalid-feedback">
+          Entrez un nom d'ingrédient
+        </div>
+
+        <input class="form-control" type="text" formControlName="unit"  placeholder="Unité" [ngClass]="getValidform('unit')"/>
+        <div  class="invalid-feedback">
+          Entrez une unité
+        </div>
+        <div class="input-group ">
+          <input class="form-control" type="number" formControlName="unit_price"   placeholder="Prix à l&#39;unité" [ngClass]="getValidform('unit_price')"/>
+          <span class="input-group-text">€</span>
+          <div  class="invalid-feedback">
+            Entrez un prix unitaire
+          </div>
+
+        </div>
+        <div class="input-group ">
+          <input class="form-control" type="number"  formControlName="stock" placeholder="Stocks" [ngClass]="getValidform('stock')"/>
+          <span class="input-group-text">(En {{getUnit().value}})</span>
+          <div  class="invalid-feedback">
+            Entrez le nombre d'ingrédient en stock
+          </div>
+        </div>
+        <select class="form-select" formControlName="id" [ngClass]="getValidform('id')">
           <option value="" disabled selected>Catégorie</option>
           <option *ngFor="let item of category" [ngValue]="item.id">{{item.name}}</option>
         </select>
+        <div  class="invalid-feedback">
+          Sélectionner une catégorie d'ingrédient
+        </div>
         <select class="form-select" formControlName="allergen">
           <option value="" disabled selected>Allergène</option>
           <option value="-1">Aucun</option>
