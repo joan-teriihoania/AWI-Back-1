@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 
 
@@ -29,9 +29,9 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class AlertComponent implements OnInit {
   etat:string|undefined;
   text:string|undefined;
-  active=false;
+  active=true;
 
-  constructor() {
+  constructor(){
     if (this.etat==undefined){
       this.etat="";
     }
@@ -39,19 +39,21 @@ export class AlertComponent implements OnInit {
       this.text="";
     }
   }
-
-  alert(){
+  public static alert(text:string ,etat:string,viewContainerRef: ViewContainerRef ){
+    viewContainerRef.clear();
+    const alert=viewContainerRef.createComponent<AlertComponent>(AlertComponent)
+    alert.instance.etat=etat;
+    alert.instance.text=text;
     setTimeout(() => {
-      this.active=false;
-
-    }, 1000);
-
+      viewContainerRef.clear();
+    }, 2000);
   }
 
 
   ngOnInit(): void {
-    this.active = true;
-    this.alert();
+    setTimeout(() => {
+      this.active=false;
+    }, 1000);
 
   }
 

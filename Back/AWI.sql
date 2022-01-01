@@ -75,6 +75,14 @@ CREATE TABLE `Recipe_Recipe` (
   `POSITION` int,
   PRIMARY KEY (`ID_RECIPE`, `ID_STEP`, `POSITION`)
 );
+CREATE TABLE `Cost` (
+  `ID` int PRIMARY KEY,
+  `COUT_FLUIDE` float,
+  `COUT_PERSONNEL` float,
+  `COUT_ASSAISONNEMENT` float,
+  `ISPERCENT` boolean
+);
+INSERT INTO `Cost` VALUES (0,10,10,5,true);
 
 ALTER TABLE `Allergene` ADD FOREIGN KEY (`ID_Category`) REFERENCES `A_Category` (`ID_Category`);
 

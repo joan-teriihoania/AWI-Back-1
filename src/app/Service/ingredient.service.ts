@@ -92,7 +92,7 @@ export class IngredientService {
 
   }
   getIcategory(){
-    let category = this.http.get<any>("http://localhost:8080/category/getICategory", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
+    let category = this.http.get<any>("http://localhost:8080/category/getCategory/I_Category", {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'body', responseType: 'json'})
     let res: Array<Category>=new Array<Category>();
     category.subscribe({
       next: (data) => {
@@ -127,6 +127,21 @@ export class IngredientService {
       NAME:category.name,
       URL:category.url,
     }
-    return this.http.post("http://localhost:8080/category/createICategory",data,this.httpOptions);
+    return this.http.post("http://localhost:8080/category/createCategory/I_Category",data,this.httpOptions);
   }
+  updateCategory(id:number,category:Category){
+    let data={
+      ID:id,
+      NAME:category.name,
+      URL:category.url,
+    }
+    return this.http.post("http://localhost:8080/category/updateCategory/I_Category",data,this.httpOptions);
+  }
+  deleteCategory(id:number){
+    let data={
+      ID:id,
+    }
+    return this.http.post("http://localhost:8080/category/deleteCategory/I_Category",data,this.httpOptions);
+  }
+
 }

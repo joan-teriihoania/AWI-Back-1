@@ -7,8 +7,7 @@ const modelCategory=require(path.join(__dirname,"../../Back/app/models/Category"
 
 router.post("/createIngredient",(req,res)=>{
   console.log(req.body);
-  data=req.body;
-  modelIngredient.create([data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category,data.STOCK,data.ALLERGEN]).then((result)=>{
+  modelIngredient.create([req.body.NAME,req.body.UNIT,req.body.UNIT_PRICE,req.body.ID_Category,req.body.STOCK,req.body.ALLERGEN]).then((result)=>{
       res.json({ID:result});
       res.status(201).end();
     }
@@ -19,8 +18,7 @@ router.post("/createIngredient",(req,res)=>{
 })
 router.post("/updateIngredient",(req,res)=>{
 
-  data=req.body;
-  modelIngredient.update([data.NAME,data.UNIT,data.UNIT_PRICE,data.ID_Category,data.STOCK,data.ALLERGEN,data.ID]).then((result)=>{
+  modelIngredient.update([req.body.NAME,req.body.UNIT,req.body.UNIT_PRICE,req.body.ID_Category,req.body.STOCK,req.body.ALLERGEN,req.body.ID]).then((result)=>{
       res.json({ID:result});
       res.status(201).end();
     }
@@ -33,18 +31,24 @@ router.post("/updateIngredient",(req,res)=>{
 
 router.get("/getIngredient",(req,res)=>{
   modelIngredient.getAll().then((result)=>{
-    console.log(JSON.parse(JSON.stringify(result)))
     res.json(JSON.parse(JSON.stringify(result)));
     res.status(200).end();
   })
 })
 router.post("/deleteIngredient",(req,res)=>{
   console.log(req.body);
-  data=req.body;
-  modelIngredient.deleteI(data.ID).then().catch((err)=>{
+  modelIngredient.deleteI(req.body.ID).then(()=>{
+    res.status(200).end();
+  }).catch((err)=>{
     console.log(err);
+    if(err.errno==1451){
+      res.status(405).end();
+    }else {
+      res.status(404).end();
+    }
+
+
   });
-  res.status(200).end();
 
 })
 

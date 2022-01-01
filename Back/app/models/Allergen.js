@@ -5,13 +5,13 @@ const db =require(path.join(__dirname, '../../../Back/BDD'));
 function create(name,id_Category){
   return new Promise((resolve,reject) =>{
       let sql="INSERT INTO `Allergen`(NAME,ID_Category) VALUES (?,?);";
-      db.query(sql,[name,id_Category],(err)=>{
-        if (err) {
-          reject(err);
+      db.query(sql,[name,id_Category],(err1)=>{
+        if (err1) {
+          reject(err1);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM Allergen; ",(err,result)=>{
-            if (err) {
-              reject(err);
+          db.query("SELECT LAST_INSERT_ID() AS ID FROM Allergen; ",(err2,result)=>{
+            if (err2) {
+              reject(err2);
             } else {
               resolve(result);
             }
@@ -24,7 +24,7 @@ function create(name,id_Category){
 }
 function getAll(){
   return new Promise((resolve,reject) =>{
-      let sql="SELECT * from `Allergen`";
+      let sql="SELECT ID_ALLERGEN,Allergen.NAME,Allergen.ID_Category,URL from `Allergen` JOIN A_Category ON Allergen.ID_Category=A_Category.ID_Category";
       db.query(sql,(err,result)=>{
         if (err) {
           reject(err);

@@ -6,8 +6,7 @@ const modelStep=require(path.join(__dirname,"../../Back/app/models/Step"))
 
 router.post("/createStep",(req,res)=>{
   console.log(req.body);
-  data=req.body;
-  modelStep.create(data.NAME,data.DESCRIPTION,data.DURATION,data.INGREDIENT).then((result)=>{
+  modelStep.create(req.body.NAME,req.body.DESCRIPTION,req.body.DURATION,req.body.INGREDIENT).then((result)=>{
       res.json({ID:result});
       res.status(201).end();
     }
@@ -32,8 +31,7 @@ router.get("/getStep",(req,res)=>{
 })
 router.post("/updateStep",(req,res)=>{
   console.log(req.body);
-  data=req.body;
-  modelStep.update(data.ID,data.NAME,data.DESCRIPTION,data.DURATION,data.INGREDIENT).then((result)=>{
+  modelStep.update(req.body.ID,req.body.NAME,req.body.DESCRIPTION,req.body.DURATION,req.body.INGREDIENT).then((result)=>{
       res.json({ID:result});
       res.status(201).end();
     }
@@ -43,13 +41,16 @@ router.post("/updateStep",(req,res)=>{
   });
 })
 
-router.post("/deleteIngredient",(req,res)=>{
+router.post("/deleteIngredient", (req, res) => {
   console.log(req.body);
-  data=req.body;
-  modelIngredient.deleteIngredient(data.ID).then().catch((err)=>{
-    console.log(err);
+
+  modelIngredient.deleteIngredient(req.body.ID).then(() => {
+      res.status(200).end()
+    }
+  ).catch((err) => {
+    console.log(err)
+    res.status(400).end();
   });
-  res.status(200).end();
 
 })
 

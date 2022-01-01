@@ -1,9 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewContainerRef} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewContainerRef} from '@angular/core';
 import {Category} from "../../class/category";
-import {Ingredient} from "../../class/ingredient";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {Allergen} from "../../class/allergen";
-import {IngredientService} from "../../Service/ingredient.service";
 import {AllergenService} from "../../Service/allergen.service";
 import {AlertComponent} from "../alert/alert.component";
 
@@ -12,49 +10,63 @@ import {AlertComponent} from "../alert/alert.component";
   templateUrl: './modal-create-allergen.component.html',
   styleUrls: ['./modal-create-allergen.component.css']
 })
-export class ModalCreateAllergenComponent implements OnInit {
-  @Input()category: Array<Category>;
-  @Output() newAllergen:EventEmitter<Allergen>
-  form:FormGroup;
-  fb:FormBuilder;
+export class ModalCreateAllergenComponent implements OnChanges {
+  @Input() category: Array<Category>;
+  @Input() updateModal = false
+  @Input() inputAllergen:Allergen|undefined;
+  @Output() newAllergen: EventEmitter<Allergen>
+  form: FormGroup;
+  fb: FormBuilder;
 
-  constructor(private requestA:AllergenService,public viewContainerRef: ViewContainerRef) {
-    this.category=requestA.getAcategory();
-    this.fb=new FormBuilder()
-    this.newAllergen=new EventEmitter<Allergen>();
-    this.form=this.fb.group({
-      name:[""],
-      id:[""]
+  constructor(private requestA: AllergenService, public viewContainerRef: ViewContainerRef) {
+    this.category = requestA.getAcategory();
+    this.fb = new FormBuilder()
+    this.newAllergen = new EventEmitter<Allergen>();
+    this.form = this.fb.group({
+      name: [""],
+      id: [""]
     });
 
   }
 
-  ngOnInit(): void {
-
+  ngOnChanges(changes: SimpleChanges): void {
+    this.form.get("name")?.setValue(this.inputAllergen?.name)
+    this.form.get("id")?.setValue(this.inputAllergen?.id_category)
   }
 
 
-  alert(text:string ,etat:string){
-    this.viewContainerRef.clear();
-    const alert=this.viewContainerRef.createComponent<AlertComponent>(AlertComponent)
-    alert.instance.etat=etat;
-    alert.instance.text=text;
 
-  }
   validate(){
     var allergen=new Allergen(0,this.form.get("name")?.value,this.form.get("id")?.value);
-    this.requestA.createAllergen(allergen).subscribe({
-      next: (res) => {
-        allergen.id=(res as {ID:number}).ID;
-        this.alert("Allergène "+allergen.name+" créer","success");
-        this.newAllergen.emit(allergen);
-      },
-      error: (e) => {
-        console.error(e)
-        this.alert("Erreur pour la création d'allergène","danger");
+    if(!this.updateModal){
+      this.requestA.createAllergen(allergen).subscribe({
+        next: (res) => {
+          allergen.id=(res as {ID:number}).ID;
+          AlertComponent.alert("Allergène "+allergen.name+" créer","success",this.viewContainerRef);
+          this.newAllergen.emit(allergen);
+        },
+        error: (e) => {
+          console.error(e)
+          AlertComponent.alert("Erreur pour la création d'allergène","danger",this.viewContainerRef);
 
-      }
-    })
+        }
+      })
+    }else {
+      this.requestA.updateAllergen(this.inputAllergen!.id,allergen).subscribe({
+        error: (e) => {
+          console.error(e)
+          AlertComponent.alert("Erreur pour la création d'allergène","danger",this.viewContainerRef);
+
+        },
+        complete:()=>{
+          allergen.id=this.inputAllergen!.id
+          AlertComponent.alert("Allergène "+allergen.name+" créer","success",this.viewContainerRef);
+          this.newAllergen.emit(allergen);
+
+        }
+      })
+    }
+
   }
 
 }

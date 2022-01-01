@@ -1,0 +1,34 @@
+<table class="table">
+  <caption>Listes des ingrédients de l'étape</caption>
+<thead>
+<tr>
+  <th scope="col">Ingrédient</th>
+  <th scope="col">Quantité</th>
+  <th scope="col">Unité</th>
+  <th scope="col">Prix</th>
+  <th scope="col">Allèrgène</th>
+</tr>
+</thead>
+<tbody>
+<tr *ngFor="let ingredient of ingredientMap|keyvalue">
+  <th>{{ingredient.key.name}}</th>
+  <td>{{convertNumber(ingredient.value*this.nbTable!,3)}} {{ingredient.key.unit}}</td>
+  <td>{{ingredient.key.unit_price}}€ {{ingredient.key.unit}}</td>
+  <td [colSpan]="ingredient.key.allergen!=undefined?'1':'2'">
+    <div style="width: fit-content" matTooltip="{{ingredient.value*this.nbTable!}}*{{ingredient.key.unit_price}} €">{{convertNumber(ingredient.value*ingredient.key.unit_price*this.nbTable!,2)}} €</div>
+  </td>
+  <td *ngIf="ingredient.key.allergen!=undefined" class='icon-tableau'><mat-icon matTooltip="{{ingredient.key.allergen.name}}"><img   height="20" [src]="ingredient.key.allergen.url" alt="icon de l'allergène"/> </mat-icon></td>
+</tr>
+<tr>
+  <th colspan="3">Total</th>
+  <td>{{convertNumber(getPrice()*this.nbTable!,2)}} €</td>
+
+  <td  class='icon-tableau'>
+    <ng-container *ngFor="let item of getAllergen()|keyvalue">
+      <mat-icon matTooltip="{{item.value}}"><img   height="20" [src]="item.key" alt="icon de l'allergène"/> </mat-icon>
+    </ng-container>
+    </td>
+</tr>
+
+</tbody>
+</table>

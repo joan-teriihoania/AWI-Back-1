@@ -1,0 +1,7 @@
+tbody:hover{
+  background-color: #efefef;
+  cursor: pointer;
+}
+.example-full-width {
+  width: 100%;
+}

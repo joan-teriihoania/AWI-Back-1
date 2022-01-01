@@ -1,16 +1,13 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule} from "@angular/router";
+import {RouterModule, Routes} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {ERR404Component} from './Page/Error/err404/err404.component';
 import {RootComponent} from "./root/root.component";
-
 import {IngredientComponent} from './Page/ingredient/ingredient.component';
 import {HttpClientModule} from '@angular/common/http';
-
-
 import {ModalCreateIngredientComponent} from './Component/modal-create-ingredient/modal-create-ingredient.component';
 import {AlertComponent} from './Component/alert/alert.component';
 import {ModalCreateStepComponent} from './Component/modal-create-step/modal-create-step.component';
@@ -24,10 +21,29 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {StepComponent} from './Page/step/step.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatInputModule} from "@angular/material/input";
-import { TableComponent } from './Component/table/table.component';
+import {TableComponent} from './Component/table/table.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {MatButtonModule} from "@angular/material/button";
+import {ModalModifyConstantComponent} from './Component/modal-modify-constant/modal-modify-constant.component';
+import {ReadRecipeComponent} from './Page/recette/read-recipe/read-recipe.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatSliderModule} from "@angular/material/slider";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { ConfirmDialogComponent } from './Component/confirm-dialog/confirm-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
+const routes: Routes = [
+  {path: "", component: AppComponent},
+  {path: "creerRecette", component: CreerRecetteComponent},
+  {path: "ingredient", component: IngredientComponent},
+  {path: "step", component: StepComponent},
+  {path: "allergen", component: AllergenComponent},
+  {path: "lire/:id", component: ReadRecipeComponent},
+  {path: "maj/:id", component: CreerRecetteComponent},
+  {path: '**', component: ERR404Component}
 
+]
 
 
 @NgModule({
@@ -45,6 +61,9 @@ import {MatTabsModule} from "@angular/material/tabs";
     ModalCreateAllergenComponent,
     StepComponent,
     TableComponent,
+    ModalModifyConstantComponent,
+    ReadRecipeComponent,
+    ConfirmDialogComponent,
   ],
     imports: [
         BrowserModule,
@@ -52,22 +71,19 @@ import {MatTabsModule} from "@angular/material/tabs";
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-
-        RouterModule.forRoot([
-            {path: "", component: AppComponent},
-            {path: "creerRecette", component: CreerRecetteComponent},
-            {path: "ingredient", component: IngredientComponent},
-            {path: "step", component: StepComponent},
-            {path: "allergen", component: AllergenComponent},
-            {path: '**', component: ERR404Component}
-
-        ]),
+        RouterModule.forRoot(routes),
         MatSelectModule,
         MatIconModule,
         MatTooltipModule,
         MatTableModule,
         MatInputModule,
         MatTabsModule,
+        DragDropModule,
+        MatButtonModule,
+        MatStepperModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatDialogModule,
     ],
   providers: [],
   bootstrap: [RootComponent]

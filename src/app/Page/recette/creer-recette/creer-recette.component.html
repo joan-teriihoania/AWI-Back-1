@@ -1,32 +1,101 @@
 
+<form class="form mt-5" [formGroup]="form" (ngSubmit)="validate()">
+  <h1 class="mb-5">{{this.id==null?"Créer sa recette":"Mise à jour de la recette"}}</h1>
+  <div class="mb-3">
+    <input class="form-control" formControlName="name" type="text" placeholder="Nom"/>
 
-<button class="btn btn-primary" type="button" data-bs-target="#creerEtape" data-bs-toggle="modal">Creer une étape</button>
-<form style="padding: 12px;"><input class="form-control" type="text" placeholder="Nom" /><input class="form-control" type="text" placeholder="Description" /><input class="form-control" type="number" placeholder="Durée de l&#39;étape (en minute)" />
-  <div class="row" >
-    <div class="col">
-      <select class="form-select" >
+  </div>
+  <div class="mb-3">
+    <input class="form-control" formControlName="author" type="text" placeholder="Auteur"/>
 
-          <ng-container >
-            <option  ></option>
-          </ng-container>
-
-      </select>
-    </div>
-    <div class="col">
-      <input class="form-control" type="text" placeholder="Quantité" />
-    </div>
-    <div class="col">
-      <button class="btn btn-outline-danger"  type="button">
-        Supprimer
-      </button>
-
+  </div>
+  <div class="mb-3">
+    <div class="input-group">
+      <span class="input-group-text">Pour</span>
+      <input class="form-control" type="number" formControlName="nbTable" min="1" placeholder="Nombre de couvert"/>
+      <span class="input-group-text">personne{{this.form.get("nbTable")!.value>1?"s":""}}</span>
     </div>
   </div>
+  <div class="mb-3">
+    <select class="form-select" formControlName="category">
+      <option value="" [selected]="this.form.get('category')!.value==null" disabled >Catégorie</option>
+      <option *ngFor="let categorie of RCategory" [selected]="this.form.get('category')!.value==categorie.id" ngValue="{{categorie.id}}">{{categorie.name}}</option>
+    </select>
+  </div>
+
   <div class="row">
-    <div class="col text-center"><button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Ajouter un ingrédient</button></div>
+    <div class="col">
+      <h1>Liste des Étapes</h1>
+    </div>
+    <div class="col-auto align-self-center ">
+      <button class="btn btn-primary " type="button" data-bs-target="#creerEtape" data-bs-toggle="modal">Creer une étape
+      </button>
+    </div>
   </div>
+  <div cdkDropList class="mb-5"  (cdkDropListDropped)="drop($event)">
+    <div [@newStepAnim] *ngFor="let item of listeIngredient" cdkDrag>
+      <div class="container" >
+        <div class="row justify-content-md-center">
+          <div class="handle col-auto align-self-center" cdkDragHandle>
+            <svg xmlns="http://www.w3.org/2000/svg"  height="24px" viewBox="0 0 24 24" width="24px" fill="#acb1b7"><g><rect fill="none" height="24" width="24"/></g><g><g/><polygon points="13,6.99 16,6.99 12,3 8,6.99 11,6.99 11,17.01 8,17.01 12,21 16,17.01 13,17.01"/></g></svg>
+          </div>
+          <div class="col-auto align-self-center">
+            <div class="number">
+              <div class="center-number">
+                {{listeIngredient.indexOf(item) + 1}}
+              </div>
+            </div>
+          </div>
+          <select class="form-select col" formControlName="{{item}}ID">
+            <option value="" disabled [selected]="this.form.get(item+'ID')!.value==null">Étape</option>
+            <optgroup label="Étape">
+              <ng-container *ngFor="let step of stepList" >
+                <option [selected]="this.form.get(item+'ID')!.value=='S'+step.id" [ngValue]="'S'+step.id">{{step.name}}</option>
+              </ng-container>
+            </optgroup>
+            <optgroup label="Recette">
+              <ng-container *ngFor="let recipe of recipeList" >
+                <option [selected]="this.form.get(item+'ID')!.value=='R'+recipe.id" [ngValue]="'R'+recipe.id">{{recipe.name}}</option>
+              </ng-container>
+            </optgroup>
+
+          </select>
+          <div class="col-auto">
+            <button class="btn btn-outline-danger" (click)="delete(item)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="listeIngredient.indexOf(item)!= listeIngredient.length-1">
+          <div class="line-vertical" >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col text-center"><button class="btn btn-primary" type="button" (click)="add()">Ajouter une Étape</button></div>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <div class="form-floating">
+        <input class="form-control" type="number" formControlName="coutAssaisonement" min="0" [max]="this.form.get('typeAssaisonement')!.value==1?'100':''" id="floatingInput3" placeholder="Coût d'assaisonnement" />
+        <label for="floatingInput3">Coût d'assaisonnement(En {{this.form.get('typeAssaisonement')!.value==1?"%":"€"}})</label>
+      </div>
+    </div>
+    <div class="col-auto align-self-center">
+      <input class="form-check-input" type="radio" name="typeAssaisonement" formControlName="typeAssaisonement"  [value]="1" > %
+      <input class="form-check-input" type="radio" name="typeAssaisonement" formControlName="typeAssaisonement" [value]="0">€
+
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit">{{this.id==null?"Créer sa recette":"Mise à jour de la recette"}}</button>
 </form>
 <app-modal-create-step id="creerEtape" [ingredientDonne]="ingredient" class="modal fade" role="dialog" tabindex="-1" ></app-modal-create-step>
 <app-modal-create-ingredient id="creerIngredient" class="modal fade" role="dialog" tabindex="-1" (newIngredient)="createIngredient($event)"></app-modal-create-ingredient>
+
 
 

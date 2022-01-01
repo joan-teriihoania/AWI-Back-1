@@ -1,6 +1,60 @@
+<div class="container mt-5 mb-3">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Filtre</mat-label>
+    <input matInput placeholder="Ex. Pizza, Courgette... "  [formControl]="filtre">
+  </mat-form-field>
 
-<mat-tab-group mat-align-tabs="center" *ngFor="let item of category">
-  <mat-tab label="First">Content 1</mat-tab>
-  <mat-tab label="Second">Content 2</mat-tab>
-  <mat-tab label="Third">Content 3</mat-tab>
+</div>
+<mat-tab-group mat-align-tabs="center">
+  <ng-container *ngFor="let item of category">
+    <mat-tab label="{{item.name}}">
+      <div class="container">
+        <table class="table">
+          <caption>Liste des recettes</caption>
+          <thead>
+          <tr>
+            <th >Nom de la recette</th>
+            <th >Auteur</th>
+            <th >Ingrédient</th>
+            <th>Allèrgène</th>
+          </tr>
+          </thead>
+          <ng-container *ngFor="let etiquette of etiquetteArray">
+            <tbody *ngIf="etiquette.id_category==item.id" routerLink="/lire/{{etiquette.id}}">
+            <tr>
+              <td>{{etiquette.name}}</td>
+              <td>{{etiquette.author}}</td>
+              <td>{{etiquette.ingredient[0].name}}</td>
+              <td>
+                <mat-icon  *ngIf="etiquette.ingredient[0].allergen!=undefined" matTooltip="{{etiquette.ingredient[0].allergen.name}}">
+                  <img height="20"  [src]="etiquette.ingredient[0].allergen.url" alt="icon de l'allergen"/>
+                </mat-icon>
+              </td>
+            </tr>
+            <ng-container *ngFor="let ingredient of etiquette.ingredient">
+              <tr *ngIf="ingredient!=etiquette.ingredient[0]">
+                <td></td>
+                <td></td>
+                <td>
+                  {{ingredient.name}}
+                </td>
+                <td>
+                  <mat-icon  *ngIf="ingredient.allergen!=undefined" matTooltip="{{ingredient.allergen.name}}">
+                    <img height="20"  [src]="ingredient.allergen.url" alt="icon de l'allergen"/>
+                  </mat-icon>
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </ng-container>
+
+        </table>
+
+      </div>
+
+
+
+    </mat-tab>
+  </ng-container>
 </mat-tab-group>
+

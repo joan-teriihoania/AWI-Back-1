@@ -1,4 +1,12 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewContainerRef
+} from '@angular/core';
 import {Ingredient} from "../../class/ingredient";
 import {IngredientService} from "../../Service/ingredient.service";
 import {Category} from "../../class/category";
@@ -6,6 +14,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {StepService} from "../../Service/step.service";
 import {Step} from "../../class/step";
+import {AlertComponent} from "../alert/alert.component";
 
 @Component({
   selector: 'app-modal-create-step',
@@ -26,7 +35,7 @@ import {Step} from "../../class/step";
     ]),
   ],
 })
-export class ModalCreateStepComponent implements OnInit, OnChanges {
+export class ModalCreateStepComponent implements  OnChanges {
   @Input() ingredientDonne: Array<Ingredient>|undefined;
   @Output() newStepEmiter: EventEmitter<Step> = new EventEmitter<Step>();
   @Input() inputStep: Step | undefined;
@@ -37,13 +46,13 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
   i_Category: Array<Category>;
   fb: FormBuilder = new FormBuilder();
   form: FormGroup = this.fb.group({
-    name: [""],
+    name: ["",[Validators.required]],
     description: [""],
-    duration: [""],
+    duration: ["",[Validators.required]],
 
   });
 
-  constructor(private requestI: IngredientService, private requestS: StepService) {
+  constructor(private requestI: IngredientService, private requestS: StepService,public viewcontainer:ViewContainerRef) {
 
     this.i_Category = requestI.getIcategory()
     if(this.ingredientDonne==undefined){
@@ -58,6 +67,12 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
         this.form.get("name")?.setValue(this.inputStep.name)
         this.form.get("description")?.setValue(this.inputStep.description)
         this.form.get("duration")?.setValue(this.inputStep.duration)
+        for(let item of this.liste){
+          this.form.removeControl(item.toString()+"ID")
+          this.form.removeControl(item.toString() + "Q");
+        }
+        this.liste=new Array<number>();
+
         for (let item of this.inputStep.ingredient) {
           this.form.addControl(this.cpt.toString() + "ID", new FormControl("", Validators.required));
           this.form.addControl(this.cpt.toString() + "Q", new FormControl("", Validators.required));
@@ -71,11 +86,6 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
       }
     }
 
-  ngOnInit(): void {
-  }
-
-  alert(text: string, etat: string) {
-  }
 
   ajoutIngredient() {
     this.form.addControl(this.cpt.toString() + "ID", new FormControl("",Validators.required));
@@ -89,12 +99,20 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
     this.form.removeControl(item.toString()+"ID")
     this.form.removeControl(item.toString() + "Q");
   }
+  getValidform(input:string){
+    if(this.form.get(input)!.untouched){
+      return ""
+    }else {
+      return this.form.get(input)!.valid?"is-valid":"is-invalid";
+
+    }
+  }
 
   validate() {
-    let ingredient=new Map<number,number>()
+    let ingredient=new Map<Ingredient,number>()
     for (let item of this.liste){
-
-      ingredient.set(this.form.get(item+"ID")?.value as number,this.form.get(item+"Q")?.value as number)
+      //TODO CHerhcher les info de l'ingrédient
+      ingredient.set(new Ingredient(this.form.get(item+"ID")?.value,"","",0,0) ,this.form.get(item+"Q")?.value as number)
     }
 
     let newStep=new Step(0,this.form.get("name")?.value,this.form.get("description")?.value,this.form.get("duration")?.value,ingredient);
@@ -102,13 +120,13 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
       this.requestS.createStep(newStep).subscribe({
         next: (res) => {
           newStep.id=(res as {ID:number}).ID;
-          this.alert("Étape "+newStep.name+" créer","success");
+          AlertComponent.alert("Étape "+newStep.name+" créer","success",this.viewcontainer)
+
           this.newStepEmiter.emit(newStep);
         },
         error: (e) => {
           console.error(e)
-          this.alert("Erreur pour la création d'étape","danger");
-
+          AlertComponent.alert("Erreur pour la création d'étape","danger",this.viewcontainer)
         }
 
       })
@@ -118,18 +136,18 @@ export class ModalCreateStepComponent implements OnInit, OnChanges {
         this.requestS.updateStep(this.inputStep.id,newStep).subscribe({
           next: (res) => {
             newStep.id=(res as {ID:number}).ID;
-            this.alert("Étape "+newStep.name+" mis à jour","success");
+            AlertComponent.alert("Étape "+newStep.name+" mis à jour","success",this.viewcontainer)
             this.newStepEmiter.emit(newStep);
           },
           error: (e) => {
             console.error(e)
-            this.alert("Erreur pour la mise à jour de l'étape","danger");
-
+            AlertComponent.alert("Erreur pour la mise à jour de l'étape","danger",this.viewcontainer)
           }
 
         })
       }else {
-        this.alert("Erreur pour la mise à jour de l'étape","danger");
+        AlertComponent.alert("Erreur pour la mise à jour de l'étape","danger",this.viewcontainer)
+
       }
 
     }

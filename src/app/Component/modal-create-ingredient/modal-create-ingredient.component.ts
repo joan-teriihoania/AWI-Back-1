@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges,
   ViewContainerRef
 } from '@angular/core';
 import {Category} from "../../class/category";
@@ -35,7 +35,7 @@ export class ModalCreateIngredientComponent implements  OnChanges {
   selectAllergen: FormControl;
 
 
-  constructor(private requestI: IngredientService, private requestA: AllergenService, public viewContainerRef: ViewContainerRef) {
+  constructor(private requestI: IngredientService, private requestA: AllergenService,public viewcontainer:ViewContainerRef) {
     this.category = requestI.getIcategory();
     this.allergenList = requestA.getAllAllergen();
     this.selectAllergen = new FormControl();
@@ -67,15 +67,10 @@ export class ModalCreateIngredientComponent implements  OnChanges {
       return this.form.get(input)!.valid?"is-valid":"is-invalid";
 
     }
-
   }
 
-  alert(text:string ,etat:string){
-    this.viewContainerRef.clear();
-    const alert=this.viewContainerRef.createComponent<AlertComponent>(AlertComponent)
-    alert.instance.etat=etat;
-    alert.instance.text=text;
-  }
+
+
 
   validate(){
     let allergenValue:Allergen|undefined=undefined;
@@ -86,16 +81,16 @@ export class ModalCreateIngredientComponent implements  OnChanges {
     })
     var ingredient=new Ingredient(0,this.form.get("name")?.value,this.form.get("unit")?.value,this.form.get("unit_price")?.value,this.form.get("id")?.value,this.form.get("stock")?.value,allergenValue);
     console.log(ingredient);
-    if(this.updateModal==false){
+    if(!this.updateModal){
       this.requestI.createIngredient(ingredient).subscribe({
         next: (res) => {
           ingredient.id=(res as {ID:number}).ID;
-          this.alert("Ingrédient "+ingredient.name+" créer","success");
+          AlertComponent.alert("Ingrédient "+ingredient.name+" créer","success",this.viewcontainer);
           this.newIngredient.emit(ingredient);
         },
         error: (e) => {
           console.error(e)
-          this.alert("Erreur pour la création d'ingrédient","danger");
+          AlertComponent.alert("Erreur pour la création d'ingrédient","danger",this.viewcontainer);
 
         }
       })
@@ -105,12 +100,12 @@ export class ModalCreateIngredientComponent implements  OnChanges {
         this.requestI.updateIngredient(this.inputIngredient.id, ingredient).subscribe({
           error: (e) => {
             console.error(e)
-            this.alert("Erreur pour la création d'ingrédient", "danger");
+            AlertComponent.alert("Erreur pour la création d'ingrédient", "danger",this.viewcontainer);
 
 
           },
           complete: () => {
-            this.alert("Ingrédient " + ingredient.name + " mis à jour", "success");
+            AlertComponent.alert("Ingrédient " + ingredient.name + " mis à jour", "success",this.viewcontainer);
             ingredient.id=ID;
             this.newIngredient.emit(ingredient);
           }

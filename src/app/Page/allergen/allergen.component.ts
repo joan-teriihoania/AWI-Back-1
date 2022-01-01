@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, ViewContainerRef} from '@angular/core';
 import {Category} from "../../class/category";
 import {AllergenService} from "../../Service/allergen.service";
 import {Allergen} from "../../class/allergen";
@@ -20,10 +20,13 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
     ])
   ]
 })
-export class AllergenComponent implements OnInit {
+export class AllergenComponent {
 
   category: Array<Category>;
   allergen:Array<Allergen>
+  editMode=false;
+  selecteCategory:Category|undefined;
+  selecteAllergen:Allergen|undefined
 
   constructor(private request:AllergenService,public viewContainerRef: ViewContainerRef ) {
     this.category=request.getAcategory();
@@ -32,19 +35,41 @@ export class AllergenComponent implements OnInit {
 
 
   }
-  ngOnInit(): void {
 
+  updateCategory(event:Category){
+    this.selecteCategory=event
   }
-
-  modify(item:Allergen){
-
+  updateAllergen(event:Allergen){
+    this.selecteAllergen=event
   }
-  alert(text:string ,etat:string){
-    this.viewContainerRef.clear();
-    const alert=this.viewContainerRef.createComponent<AlertComponent>(AlertComponent)
-    alert.instance.etat=etat;
-    alert.instance.text=text;
+  updateEmitCategory(event:Category){
+    let category=this.category.findIndex((value) => value.id==event.id)
+    if(category!=undefined){
+      this.category[category]=event
+    }
+  }
+  updateEmitAllergen(event:Allergen){
+    let allergen=this.allergen.findIndex((value) => value.id==event.id)
+    if(allergen!=undefined){
+      this.allergen[allergen]=event
+    }
+  }
+  deleteCategory(event:Category){
+    this.request.deleteCategory(event.id).subscribe({
+      error:(err)=>{
+        if(err.status == 405){
+          AlertComponent.alert("Erreur la catégorié contient des allergène", "danger",this.viewContainerRef)
+        }else {
+          AlertComponent.alert("Erreur au niveau du back", "danger",this.viewContainerRef)
+          console.log(err)
+        }
+      },
+      complete:()=>{
+        this.category.splice(this.category.indexOf(event), 1)
+        AlertComponent.alert("Catégorie " + event.name + " a bien été supprimé", "success",this.viewContainerRef)
 
+      }
+    })
   }
   delete(item:Allergen){
 
@@ -53,9 +78,9 @@ export class AllergenComponent implements OnInit {
           console.error(e)
         },
         complete:()=> {
-          console.log("Suppresion " + item.id)
+
           this.allergen.splice(this.allergen.indexOf(item), 1)
-          this.alert("L'ingrédient " + item.name + " a bien été supprimé", "success")
+          AlertComponent.alert("L'ingrédient " + item.name + " a bien été supprimé", "success",this.viewContainerRef)
 
         }
 

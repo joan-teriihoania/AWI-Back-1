@@ -9,7 +9,7 @@ function createCategory(category,nom,url){
         if (err) {
           reject(err);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM "+category+";",(err,result)=>{
+          db.query("SELECT LAST_INSERT_ID() AS ID FROM "+category+" ;",(err,result)=>{
             if (err) {
               reject(err);
             } else {
@@ -24,7 +24,7 @@ function createCategory(category,nom,url){
 }
 function getCategory(category){
   return new Promise((resolve,reject) =>{
-      let sql="SELECT * from "+category+" ;"
+      let sql="SELECT * from "+category+";"
       db.query(sql,(err,result)=>{
         if (err) {
           reject(err);
@@ -35,10 +35,22 @@ function getCategory(category){
     }
   )
 }
-
-function deleteCategory(ID,category){
+function updateCategory(category,id,nom,url){
   return new Promise((resolve,reject) =>{
-      let sql="DELETE FROM "+category+"WHERE ID_Category= ?;";
+      let sql="UPDATE "+category+" SET NAME = ? , URL = ? WHERE ID_Category= ?;";
+      db.query(sql,[nom,url,id],(err,result)=>{
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    }
+  )
+}
+function deleteCategory(category,ID){
+  return new Promise((resolve,reject) =>{
+      let sql="DELETE FROM "+category+" WHERE ID_Category= ?;";
       db.query(sql,[ID],(err,result)=>{
         if (err) {
           reject(err);
@@ -49,4 +61,4 @@ function deleteCategory(ID,category){
     }
   )
 }
-module.exports={createCategory,getCategory,deleteCategory}
+module.exports={createCategory,getCategory,updateCategory,deleteCategory}
