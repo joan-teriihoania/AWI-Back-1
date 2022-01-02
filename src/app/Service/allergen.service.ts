@@ -42,7 +42,7 @@ export class AllergenService {
       NAME:allergen.name,
       ID_Category: allergen.id_category
     }
-    return this.http.post("http://localhost:8080/allergen/updateAllergen",data,this.httpOptions);
+    return this.http.put("http://localhost:8080/allergen/updateAllergen",data,this.httpOptions);
   }
 
 
@@ -59,7 +59,7 @@ export class AllergenService {
       NAME:category.name,
       URL:category.url,
     }
-    return this.http.post("http://localhost:8080/category/updateCategory/A_Category",data,this.httpOptions);
+    return this.http.put("http://localhost:8080/category/updateCategory/A_Category",data,this.httpOptions);
   }
   deleteCategory(id:number){
     let data={

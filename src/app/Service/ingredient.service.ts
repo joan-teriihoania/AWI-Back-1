@@ -88,7 +88,7 @@ export class IngredientService {
       }
 
     }
-    return this.http.post("http://localhost:8080/ingredient/updateIngredient",data,this.httpOptions);
+    return this.http.put("http://localhost:8080/ingredient/updateIngredient",data,this.httpOptions);
 
   }
   getIcategory(){
@@ -135,7 +135,7 @@ export class IngredientService {
       NAME:category.name,
       URL:category.url,
     }
-    return this.http.post("http://localhost:8080/category/updateCategory/I_Category",data,this.httpOptions);
+    return this.http.put("http://localhost:8080/category/updateCategory/I_Category",data,this.httpOptions);
   }
   deleteCategory(id:number){
     let data={

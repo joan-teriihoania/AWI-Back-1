@@ -37,11 +37,11 @@ function getAll(){
   return new Promise((resolve, reject) =>{
     let sql="SELECT Step.ID_STEP,Step.NAME AS NAME, DESCRIPTION, DURATION,JSON_ARRAYAGG(JSON_OBJECT('ID', Ingredient.ID_INGREDIENT,'NAME',Ingredient.NAME,'QUANTITY',FORMAT(QUANTITY,3),'UNIT',UNIT,'UNIT_PRICE', FORMAT(UNIT_PRICE,2),'ID_Category',Ingredient.ID_Category,'STOCK',FORMAT(STOCK,3)," +
       "'ALLERGEN',JSON_OBJECT('ID', Ingredient.ID_ALLERGEN,'NAME',Allergen.NAME,'ID_Category',Allergen.ID_Category,'URL',URL))) INGREDIENT " +
-      "FROM Step, Step_Ingredient, Ingredient " +
+      "FROM Step " +
+      "LEFT JOIN Step_Ingredient on Step.ID_STEP=Step_Ingredient.ID_STEP " +
+      "LEFT JOIN  Ingredient on Step_Ingredient.ID_INGREDIENT=Ingredient.ID_INGREDIENT " +
       "LEFT JOIN Allergen on Ingredient.ID_ALLERGEN=Allergen.ID_ALLERGEN " +
       "LEFT JOIN A_Category on Allergen.ID_Category=A_Category.ID_Category " +
-      "WHERE Step.ID_STEP=Step_Ingredient.ID_STEP " +
-      "AND Step_Ingredient.ID_INGREDIENT=Ingredient.ID_INGREDIENT " +
       "GROUP BY Step.ID_STEP;"
     db.query(sql,(err,result)=>{
       if (err) {
@@ -82,5 +82,39 @@ function update(id, name, description, duration, ingredient) {
   })
 
 }
+function deleteStep(id) {
+  return new Promise((resolve, reject) => {
 
-module.exports={create,update,getAll}
+    db.query("SELECT * FROM Recipe_Step WHERE ID_STEP=? ", [id], (err1,result) => {
+      if (err1) {
+        reject(err1);
+      } else {
+        console.log(JSON.parse(JSON.stringify(result))[0]==undefined)
+        if(JSON.parse(JSON.stringify(result))[0]==undefined){
+
+          db.query("DELETE FROM `Step_Ingredient` WHERE ID_STEP = ? ;", [id], (err2) => {
+            if (err2) {
+              reject(err2);
+            } else {
+
+              db.query("DELETE FROM `Step` WHERE ID_STEP = ? ;", [id], (err3) => {
+                if (err3) {
+                  reject(err3);
+
+                }
+                resolve("done");
+              })
+
+            }
+          })
+        }else{
+          reject({errno:1451})
+        }
+
+      }
+    })
+  })
+
+}
+
+module.exports={create,update,getAll,deleteStep}

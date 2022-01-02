@@ -19,7 +19,7 @@ router.get("/getCost", (req, res) => {
   )
 })
 
-router.post("/setCost",(req,res)=>{
+router.put("/setCost",(req,res)=>{
 
   modelRecipe.setDefaultCost([req.body.COUT_FLUIDE, req.body.COUT_PERSONNEL ,req.body.COUT_ASSAISONEMENT,req.body.ISPERCENT]).then(()=>{
     res.status(200).end();
@@ -40,7 +40,7 @@ router.post("/createRecipe",(req,res)=>{
     res.status(400).end();
   });
 })
-router.post("/updateRecipe",(req,res)=>{
+router.put("/updateRecipe",(req,res)=>{
   modelRecipe.updateRecipe(req.body.ID,req.body.NAME,req.body.NB_COUVERT,req.body.COUT_ASSAISONNEMENT,req.body.ISPERCENT,req.body.AUTHOR,req.body.ID_Category,req.body.STEP).then((result)=>{
       res.status(201).end();
     }

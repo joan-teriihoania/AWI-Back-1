@@ -6,6 +6,7 @@ import {Step} from "../class/step";
 import {Ingredient} from "../class/ingredient";
 import {Allergen} from "../class/allergen";
 import {Etiquette} from "../class/etiquette";
+import {Observable} from "rxjs";
 
 
 
@@ -33,6 +34,27 @@ export class RecipeService {
       error: (e) => console.error(e)
     })
     return res;
+  }
+  createCategory(category:Category):Observable<any>{
+    let data={
+      NAME:category.name,
+      URL:category.url,
+    }
+    return this.http.post("http://localhost:8080/category/createCategory/R_Category",data,this.httpOptions);
+  }
+  updateCategory(id:number,category:Category){
+    let data={
+      ID:id,
+      NAME:category.name,
+      URL:category.url,
+    }
+    return this.http.put("http://localhost:8080/category/updateCategory/R_Category",data,this.httpOptions);
+  }
+  deleteCategory(id:number){
+    let data={
+      ID:id,
+    }
+    return this.http.post("http://localhost:8080/category/deleteCategory/R_Category",data,this.httpOptions);
   }
 
   /**
@@ -100,7 +122,7 @@ export class RecipeService {
         console.log("Erreur type")
       }
     })
-    return this.http.post("http://localhost:8080/recipe/updateRecipe", data, this.httpOptions);
+    return this.http.put("http://localhost:8080/recipe/updateRecipe", data, this.httpOptions);
   }
 
   deleteRecipe(id:number){
@@ -146,12 +168,14 @@ export class RecipeService {
           let stepArray=new Map<number,Step>()
           for(let d of data){
             let ingredientArray=new Map<Ingredient,number>()
-            for (let ingredient of d.INGREDIENT){
-              if(ingredient.ALLERGEN.ID==null){
-                ingredientArray.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK),ingredient.QUANTITY)
-              }else {
-                ingredientArray.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK,
-                  new Allergen(ingredient.ALLERGEN.ID,ingredient.ALLERGEN.NAME,ingredient.ALLERGEN.ID_Category,ingredient.ALLERGEN.URL)),ingredient.QUANTITY)
+            if(d.INGREDIENT[0].ID!=null) {
+              for (let ingredient of d.INGREDIENT) {
+                if (ingredient.ALLERGEN.ID == null) {
+                  ingredientArray.set(new Ingredient(ingredient.ID, ingredient.NAME, ingredient.UNIT, ingredient.UNIT_PRICE, ingredient.ID_Category, ingredient.STOCK), ingredient.QUANTITY)
+                } else {
+                  ingredientArray.set(new Ingredient(ingredient.ID, ingredient.NAME, ingredient.UNIT, ingredient.UNIT_PRICE, ingredient.ID_Category, ingredient.STOCK,
+                    new Allergen(ingredient.ALLERGEN.ID, ingredient.ALLERGEN.NAME, ingredient.ALLERGEN.ID_Category, ingredient.ALLERGEN.URL)), ingredient.QUANTITY)
+                }
               }
             }
             stepArray.set(d.POSITION,new Step(d.ID_STEP,d.NAMES,d.DESCRIPTION,d.DURATION,ingredientArray))

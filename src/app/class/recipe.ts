@@ -56,6 +56,18 @@ export class Recipe implements Stepable{
     })
     return sum
   }
+  stockAvailableForRecipe(nbCouvert:number):boolean{
+    let step=this.getStep();
+    let result=true;
+    for(let i = 0;i<step.length && result;i++){
+      step[i].ingredient.forEach((value, key) => {
+        if(key.stock<value*nbCouvert){
+          result=false;
+        }
+      })
+    }
+      return result;
+  }
 
 
 }

@@ -5,6 +5,8 @@ import {Category} from "../../class/category";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {AlertComponent} from "../../Component/alert/alert.component";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ConfirmDialogComponent} from "../../Component/confirm-dialog/confirm-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
@@ -31,7 +33,7 @@ export class IngredientComponent {
   editMode = false;
 
 
-  constructor(private request: IngredientService, public viewContainerRef: ViewContainerRef) {
+  constructor(private request: IngredientService, public viewContainerRef: ViewContainerRef,public dialogRef:MatDialog) {
     this.category = request.getIcategory();
     this.ingredient = request.getAllIngredient();
 
@@ -47,13 +49,6 @@ export class IngredientComponent {
     this.category.push(event)
   }
 
-  alert(text: string, etat: string) {
-    this.viewContainerRef.clear();
-    const alert = this.viewContainerRef.createComponent<AlertComponent>(AlertComponent)
-    alert.instance.etat = etat;
-    alert.instance.text = text;
-
-  }
 
   updateIngredient(item: Ingredient) {
     this.selectedIngredient = item;
@@ -83,22 +78,31 @@ export class IngredientComponent {
   }
 
   deleteCategory(event: Category) {
-    this.request.deleteCategory(event.id).subscribe({
-      error: (err) => {
-        if (err.status == 405) {
-          this.alert("Erreur la catégorié contien des ingrédients", "danger")
-        } else {
-          this.alert("Erreur au niveau du back", "danger")
-          console.log(err)
+    let dialog=this.dialogRef.open(ConfirmDialogComponent,{
+      width:'25%',
+      data:"Voulez-vous supprimer "+event.name+"?",
+    })
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.request.deleteCategory(event.id).subscribe({
+        error: (err) => {
+          if (err.status == 405) {
+            AlertComponent.alert("Erreur la catégorié contien des ingrédients", "danger",this.viewContainerRef)
+          } else {
+            AlertComponent.alert("Erreur au niveau du back", "danger",this.viewContainerRef)
+            console.log(err)
+          }
+
+        },
+        complete: () => {
+          this.category.splice(this.category.indexOf(event), 1)
+          AlertComponent.alert("Catégorie " + event.name + " a bien été supprimé", "success",this.viewContainerRef)
+
         }
-
-      },
-      complete: () => {
-        this.category.splice(this.category.indexOf(event), 1)
-        this.alert("Catégorie " + event.name + " a bien été supprimé", "success")
-
+      })
       }
     })
+
 
   }
 
@@ -106,24 +110,33 @@ export class IngredientComponent {
     if (item == undefined) {
       console.log("Erorr ingredient not defined")
     } else {
-      this.request.delete(item.id).subscribe({
-          error: (err: HttpErrorResponse) => {
-            if (err.status == 405) {
-              this.alert("Erreur ingrédient présent dans d'autre étape", "danger")
-            } else {
-              this.alert("Erreur au niveau du back", "danger")
-              console.log(err)
+      let dialog=this.dialogRef.open(ConfirmDialogComponent,{
+        width:'25%',
+        data:"Voulez-vous supprimer "+item.name+"?",
+      })
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          this.request.delete(item.id).subscribe({
+            error: (err: HttpErrorResponse) => {
+              if (err.status == 405) {
+                AlertComponent.alert("Erreur ingrédient présent dans d'autre étape", "danger",this.viewContainerRef)
+              } else {
+                AlertComponent.alert("Erreur au niveau du back", "danger",this.viewContainerRef)
+                console.log(err)
+              }
+
+            },
+            complete: () => {
+              this.ingredient.splice(this.ingredient.indexOf(item), 1)
+              AlertComponent.alert("L'ingrédient " + item.name + " a bien été supprimé", "success",this.viewContainerRef)
+
             }
 
-          },
-          complete: () => {
-            this.ingredient.splice(this.ingredient.indexOf(item), 1)
-            this.alert("L'ingrédient " + item.name + " a bien été supprimé", "success")
-
           }
-
+        )
         }
-      )
+      })
+
 
     }
 

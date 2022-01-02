@@ -75,27 +75,34 @@ function updateRecipe(ID, NAME, NB_COUVERT, COUT_ASSAISONNEMENT, ISPERCENT, AUTH
       if (err) {
         reject(err);
       } else {
-        db.query("DELETE FROM Recipe_Recipe WHERE ID_RECIPE=?;DELETE FROM Recipe_Step WHERE ID_RECIPE=?;",[ID,ID],(err)=>{
+        db.query("DELETE FROM Recipe_Recipe WHERE ID_RECIPE=?;",[ID],(err)=>{
           if(err){
             reject(err)
           }else {
-            for (let item of STEP) {
-              if (item.TYPE == "RECIPE") {
-                db.query("INSERT INTO Recipe_Recipe VALUES (?,?,?);", [ID, item.ID, item.RANK], (err) => {
-                  if (err) {
-                    reject(err);
+            db.query("DELETE FROM Recipe_Step WHERE ID_RECIPE=?;",[ID],(err)=>{
+              if(err)
+                reject(err);
+              else {
+                for (let item of STEP) {
+                  if (item.TYPE == "RECIPE") {
+                    db.query("INSERT INTO Recipe_Recipe VALUES (?,?,?);", [ID, item.ID, item.RANK], (err) => {
+                      if (err) {
+                        reject(err);
+                      }
+                    })
+                  } else if (item.TYPE == "STEP") {
+                    db.query("INSERT INTO Recipe_Step VALUES (?,?,?);", [ID, item.ID, item.RANK], (err) => {
+                      if (err) {
+                        reject(err);
+                      }
+                    })
+                  } else {
+                    reject("Err type not a step or a recipe")
                   }
-                })
-              } else if (item.TYPE == "STEP") {
-                db.query("INSERT INTO Recipe_Step VALUES (?,?,?);", [ID, item.ID, item.RANK], (err) => {
-                  if (err) {
-                    reject(err);
-                  }
-                })
-              } else {
-                reject("Err type not a step or a recipe")
+                }
               }
-            }
+            })
+
             resolve("Done");
           }
         })
@@ -167,8 +174,8 @@ function getRecipById(id){
       "FROM Recipe  " +
       "JOIN Recipe_Step on Recipe.ID_RECIPE = Recipe_Step.ID_RECIPE  " +
       "JOIN Step on Step.ID_STEP = Recipe_Step.ID_STEP  " +
-      "JOIN Step_Ingredient on  Step.ID_STEP= Step_Ingredient.ID_STEP  " +
-      "JOIN Ingredient on Step_Ingredient.ID_INGREDIENT=Ingredient.ID_INGREDIENT  " +
+      "LEFT JOIN Step_Ingredient on  Step.ID_STEP= Step_Ingredient.ID_STEP  " +
+      "LEFT JOIN Ingredient on Step_Ingredient.ID_INGREDIENT=Ingredient.ID_INGREDIENT  " +
       "LEFT JOIN Allergen on Ingredient.ID_ALLERGEN=Allergen.ID_ALLERGEN  " +
       "LEFT JOIN A_Category on Allergen.ID_Category=A_Category.ID_Category  " +
       "WHERE Recipe.ID_RECIPE= ? " +

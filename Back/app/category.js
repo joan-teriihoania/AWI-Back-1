@@ -30,7 +30,7 @@ router.post("/createCategory/:type",(req,res)=>{
   }else res.status(400).end();
 
 })
-router.post("/updateCategory/:type",(req,res)=>{
+router.put("/updateCategory/:type",(req,res)=>{
   if(req.params.type=="I_Category"||req.params.type=="A_Category"||req.params.type=="R_Category"){
     modelCategory.updateCategory(req.params.type,req.body.ID,req.body.NAME,req.body.URL).then(()=>{
       res.status(201).end();

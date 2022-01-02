@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Step} from "../class/step";
 import {Ingredient} from "../class/ingredient";
 import {Allergen} from "../class/allergen";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,7 @@ export class StepService {
 
       }
     })
-    return this.http.post("http://localhost:8080/step/updateStep", data, this.httpOptions);
+    return this.http.put("http://localhost:8080/step/updateStep", data, this.httpOptions);
 
   }
   getAllStep() {
@@ -71,20 +72,29 @@ export class StepService {
       next: (data) => {
         for(let d of data){
           let ingredientMap=new Map<Ingredient,number>()
-          for (let ingredient of d.INGREDIENT){
-            if(ingredient.ALLERGEN.ID==null){
-              ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK),ingredient.QUANTITY)
-            }else {
-              ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK,
-                new Allergen(ingredient.ALLERGEN.ID,ingredient.ALLERGEN.NAME,ingredient.ALLERGEN.ID_Category,ingredient.ALLERGEN.URL)),ingredient.QUANTITY)
+          if(d.INGREDIENT[0].ID!=null){
+            for (let ingredient of d.INGREDIENT){
+              if(ingredient.ALLERGEN.ID==null){
+                ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK),ingredient.QUANTITY)
+              }else {
+                ingredientMap.set(new Ingredient(ingredient.ID,ingredient.NAME,ingredient.UNIT,ingredient.UNIT_PRICE,ingredient.ID_Category,ingredient.STOCK,
+                  new Allergen(ingredient.ALLERGEN.ID,ingredient.ALLERGEN.NAME,ingredient.ALLERGEN.ID_Category,ingredient.ALLERGEN.URL)),ingredient.QUANTITY)
+              }
             }
           }
+
           res.push(new Step(d.ID_STEP,d.NAME,d.DESCRIPTION,d.DURATION,ingredientMap));
         }
       },
       error: (e) => console.log(e)
     })
     return res;
+  }
+  deleteStep(event:Step){
+      let data={
+        ID:event.id,
+      }
+      return this.http.post("http://localhost:8080/step/deleteStep",data,this.httpOptions)
   }
 
 

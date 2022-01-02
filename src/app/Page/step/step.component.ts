@@ -1,8 +1,12 @@
-import { AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, ViewContainerRef} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Step} from "../../class/step";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {StepService} from "../../Service/step.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {AlertComponent} from "../../Component/alert/alert.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "../../Component/confirm-dialog/confirm-dialog.component";
 
 
 
@@ -28,7 +32,7 @@ export class StepComponent implements AfterViewInit {
   steptoUpdate:Step|undefined;
 
 
-  constructor(public request: StepService) {
+  constructor(private request: StepService,public view:ViewContainerRef,public dialogRef:MatDialog) {
     this.data=request.getAllStep()
     this.dataSource.data=request.getAllStep()
     console.log(request.getAllStep())
@@ -51,6 +55,38 @@ export class StepComponent implements AfterViewInit {
     setTimeout(()=> {
       this.buildtable()
     }, 100)
+  }
+  deleteStep(event:Step){
+
+    let dialog=this.dialogRef.open(ConfirmDialogComponent,{
+      width:'25%',
+      data:"Voulez-vous supprimer "+event.name+"?",
+    })
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.request.deleteStep(event).subscribe({
+            error: (err: HttpErrorResponse) => {
+              if (err.status == 405) {
+                AlertComponent.alert("Erreur étape présent dans d'autre recette", "danger",this.view)
+              } else {
+                AlertComponent.alert("Erreur au niveau du back", "danger",this.view)
+                console.log(err)
+              }
+
+            },
+            complete: () => {
+              this.data.splice(this.data.indexOf(event), 1)
+              this.dataSource.data=this.data;
+              AlertComponent.alert("L'étape " + event.name + " a bien été supprimé", "success",this.view);
+
+            }
+
+          }
+        )
+      }
+    })
+
+
   }
 
   ngAfterViewInit(): void {

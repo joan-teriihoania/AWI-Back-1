@@ -1,8 +1,16 @@
 <div class="container mt-3 mb-3">
-  <mat-form-field class="full-width" appearance="standard">
-    <mat-label>Filtre</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex Blanc d'oeuf" #input>
-  </mat-form-field>
+  <div class="row">
+    <mat-form-field class="full-width col" appearance="standard">
+      <mat-label>Filtre</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex Blanc d'oeuf" #input>
+    </mat-form-field>
+    <div class="col-auto align-self-center">
+      <button class="btn btn-primary " type="button" data-bs-target="#creerEtape" data-bs-toggle="modal">Creer une étape
+      </button>
+    </div>
+
+  </div>
+
 
 </div>
 
@@ -10,7 +18,6 @@
 <table mat-table
        [dataSource]="dataSource"  multiTemplateDataRows
        class="mat-elevation-z8">
-  <caption>Liste des étapes</caption>
 
 
   <ng-container matColumnDef="id">
@@ -43,7 +50,7 @@
 
             </div>
             <div class="col">
-              <app-table [ingredientMap]="element.ingredient"></app-table>
+              <app-table  [ingredientMap]="element.ingredient"></app-table>
 
 
             </div>
@@ -56,7 +63,7 @@
 
               </div>
               <div class="row" >
-                <button class="btn btn-outline-danger">
+                <button class="btn btn-outline-danger"(click)="deleteStep(element)">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#dc3545"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                 </button>
               </div>
@@ -88,4 +95,5 @@
     <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
   </tr>
 </table>
+<app-modal-create-step id="creerEtape" class="modal fade" role="dialog" tabindex="-1" (newStepEmiter)="updateEmitter()"></app-modal-create-step>
 <app-modal-create-step [updateModal]="true" id="updateEtape"  (newStepEmiter)="updateEmitter()" class="modal fade" role="dialog" tabindex="-1" [inputStep]="steptoUpdate"></app-modal-create-step>

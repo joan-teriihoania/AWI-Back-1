@@ -29,7 +29,7 @@ router.get("/getStep",(req,res)=>{
     res.status(200).end();
   })
 })
-router.post("/updateStep",(req,res)=>{
+router.put("/updateStep",(req,res)=>{
   console.log(req.body);
   modelStep.update(req.body.ID,req.body.NAME,req.body.DESCRIPTION,req.body.DURATION,req.body.INGREDIENT).then((result)=>{
       res.json({ID:result});
@@ -41,15 +41,19 @@ router.post("/updateStep",(req,res)=>{
   });
 })
 
-router.post("/deleteIngredient", (req, res) => {
+router.post("/deleteStep", (req, res) => {
   console.log(req.body);
 
-  modelIngredient.deleteIngredient(req.body.ID).then(() => {
+  modelStep.deleteStep(req.body.ID).then(() => {
+    console.log("fin")
       res.status(200).end()
     }
   ).catch((err) => {
-    console.log(err)
-    res.status(400).end();
+    if(err.errno==1451){
+      res.status(405).end();
+    }else {
+      res.status(404).end();
+    }
   });
 
 })

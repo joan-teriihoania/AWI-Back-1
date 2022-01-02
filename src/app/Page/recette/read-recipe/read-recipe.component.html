@@ -71,7 +71,6 @@
   </div>
   <mat-slide-toggle [formControl]="chargeCost">Calculer Coût Charge</mat-slide-toggle>
   <table class="table">
-    <caption>Calul des prix</caption>
     <thead>
     <th>Catégorie</th>
     <th>Résultat</th>
@@ -131,5 +130,8 @@
     </tr>
     </tbody>
   </table>
+  <button class="btn btn-primary">Imprimé la recette</button>
+  <mat-slide-toggle [formControl]="printCost">{{printCost.value?"avec les coûts":"sans les coûts"}}</mat-slide-toggle>
+  <button class="btn btn-primary">Enregistré la vente</button>
 </div>
 <app-modal-modify-constant (newData)="changeCost($event)" id="constant" class="modal fade" role="dialog" tabindex="-1"></app-modal-modify-constant>

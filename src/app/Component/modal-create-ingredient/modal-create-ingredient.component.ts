@@ -101,8 +101,6 @@ export class ModalCreateIngredientComponent implements  OnChanges {
           error: (e) => {
             console.error(e)
             AlertComponent.alert("Erreur pour la création d'ingrédient", "danger",this.viewcontainer);
-
-
           },
           complete: () => {
             AlertComponent.alert("Ingrédient " + ingredient.name + " mis à jour", "success",this.viewcontainer);

@@ -15,7 +15,7 @@ router.post("/createAllergen",(req,res)=>{
     res.status(400).end();
   });
 })
-router.post("/updateAllergen",(req,res)=>{
+router.put("/updateAllergen",(req,res)=>{
   console.log(req.body);
   modelAllergen.update(req.body.ID,req.body.NAME,req.body.ID_Category).then((result)=>{
       res.json(JSON.parse(JSON.stringify(result))[0]);

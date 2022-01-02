@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router();
 const path = require("path");
 const modelIngredient=require(path.join(__dirname,"../../Back/app/models/Ingredient"))
-const modelCategory=require(path.join(__dirname,"../../Back/app/models/Category"))
+
 
 
 router.post("/createIngredient",(req,res)=>{
@@ -16,7 +16,7 @@ router.post("/createIngredient",(req,res)=>{
     res.status(400).end();
   });
 })
-router.post("/updateIngredient",(req,res)=>{
+router.put("/updateIngredient",(req,res)=>{
 
   modelIngredient.update([req.body.NAME,req.body.UNIT,req.body.UNIT_PRICE,req.body.ID_Category,req.body.STOCK,req.body.ALLERGEN,req.body.ID]).then((result)=>{
       res.json({ID:result});

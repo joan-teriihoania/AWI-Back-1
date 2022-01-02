@@ -21,6 +21,7 @@ export class ReadRecipeComponent implements OnInit {
   marge=new FormControl()
   chargeCost=new FormControl()
   typeAssaisonement=new FormControl()
+  printCost=new FormControl()
   cout_fluide:number
   cout_personnel:number
 
@@ -110,7 +111,6 @@ export class ReadRecipeComponent implements OnInit {
               let text=""
               for (let item of err){
                 text+=item.NAME+" "
-
               }
               AlertComponent.alert("Erreur la recette est utilisé dans les recettes "+text, "danger", this.view)
             },
@@ -121,8 +121,6 @@ export class ReadRecipeComponent implements OnInit {
             complete: () => {
               this.router.navigate(['/'])
             }
-
-
           })
         }
       }
@@ -131,7 +129,6 @@ export class ReadRecipeComponent implements OnInit {
   changeCost(event:{COUT_PERSONNEL:number,COUT_FLUIDE:number}){
     this.cout_fluide=event.COUT_FLUIDE;
     this.cout_personnel=event.COUT_PERSONNEL;
-
   }
 
 }

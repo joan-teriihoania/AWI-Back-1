@@ -4,6 +4,8 @@ import {AllergenService} from "../../Service/allergen.service";
 import {Allergen} from "../../class/allergen";
 import {AlertComponent} from "../../Component/alert/alert.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "../../Component/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: 'app-allergen',
@@ -28,7 +30,7 @@ export class AllergenComponent {
   selecteCategory:Category|undefined;
   selecteAllergen:Allergen|undefined
 
-  constructor(private request:AllergenService,public viewContainerRef: ViewContainerRef ) {
+  constructor(private request:AllergenService,public viewContainerRef: ViewContainerRef ,public dialogRef:MatDialog) {
     this.category=request.getAcategory();
     this.allergen=request.getAllAllergen();
 
@@ -55,37 +57,55 @@ export class AllergenComponent {
     }
   }
   deleteCategory(event:Category){
-    this.request.deleteCategory(event.id).subscribe({
-      error:(err)=>{
-        if(err.status == 405){
-          AlertComponent.alert("Erreur la catégorié contient des allergène", "danger",this.viewContainerRef)
-        }else {
-          AlertComponent.alert("Erreur au niveau du back", "danger",this.viewContainerRef)
-          console.log(err)
-        }
-      },
-      complete:()=>{
-        this.category.splice(this.category.indexOf(event), 1)
-        AlertComponent.alert("Catégorie " + event.name + " a bien été supprimé", "success",this.viewContainerRef)
+    let dialog=this.dialogRef.open(ConfirmDialogComponent,{
+      width:'25%',
+      data:"Voulez-vous supprimer "+event.name+"?",
+    })
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.request.deleteCategory(event.id).subscribe({
+        error:(err)=>{
+          if(err.status == 405){
+            AlertComponent.alert("Erreur la catégorié contient des allergène", "danger",this.viewContainerRef)
+          }else {
+            AlertComponent.alert("Erreur au niveau du back", "danger",this.viewContainerRef)
+            console.log(err)
+          }
+        },
+        complete:()=>{
+          this.category.splice(this.category.indexOf(event), 1)
+          AlertComponent.alert("Catégorie " + event.name + " a bien été supprimé", "success",this.viewContainerRef)
 
+        }
+      })
       }
     })
+
   }
   delete(item:Allergen){
+    let dialog=this.dialogRef.open(ConfirmDialogComponent,{
+      width:'25%',
+      data:"Voulez-vous supprimer "+item.name+"?",
+    })
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.request.delete(item.id).subscribe({
+            error: (e) => {
+              console.error(e)
+            },
+            complete:()=> {
 
-    this.request.delete(item.id).subscribe({
-        error: (e) => {
-          console.error(e)
-        },
-        complete:()=> {
+              this.allergen.splice(this.allergen.indexOf(item), 1)
+              AlertComponent.alert("L'ingrédient " + item.name + " a bien été supprimé", "success",this.viewContainerRef)
 
-          this.allergen.splice(this.allergen.indexOf(item), 1)
-          AlertComponent.alert("L'ingrédient " + item.name + " a bien été supprimé", "success",this.viewContainerRef)
+            }
 
-        }
-
+          }
+        )
       }
-    )
+    })
+
+
   }
   addC(category:Category){
     this.category.push(category)

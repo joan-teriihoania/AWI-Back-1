@@ -21,7 +21,7 @@ export class ConstantCostService {
       ISPERCENT:type,
     }
 
-    return this.http.post("http://localhost:8080/recipe/setCost", data, this.httpOptions);
+    return this.http.put("http://localhost:8080/recipe/setCost", data, this.httpOptions);
 
   }
   getCost(){
