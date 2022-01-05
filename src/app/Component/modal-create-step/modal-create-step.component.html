@@ -1,0 +1,82 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{updateModal ? "Mettre à jour une étape" : "Créer une étape"}}</h4>
+      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form style="padding: 12px;" [formGroup]="form" (ngSubmit)="validate()">
+      <div class="modal-body">
+        <div class="mb-3">
+          <input class="form-control" type="text" [ngClass]="getValidform('name')" formControlName="name" placeholder="Nom"/>
+          <div  class="invalid-feedback">
+            Entrez un nom d'étape
+          </div>
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+
+        </div>
+        <div class="mb-3">
+          <div class="input-group" [ngClass]="getValidform('duration')">
+            <input class="form-control" type="number" formControlName="duration" [ngClass]="getValidform('duration')"  placeholder="Durée de l&#39;étape"/>
+            <span class="input-group-text">(en minute)</span>
+          </div>
+          <div  class="invalid-feedback">
+            Entrez une durée d'étape
+          </div>
+        </div>
+
+        <div class="row mb-3" *ngFor="let item of liste">
+          <div class="col">
+            <select class="form-select" formControlName="{{item}}ID" [ngClass]="getValidform(item+'ID')">
+              <option value="" disabled selected>Aucun</option>
+              <optgroup *ngFor="let category of i_Category" label="{{category.name}}">
+                <ng-container *ngFor="let item2 of ingredientDonne">
+                  <option *ngIf="category.id==item2.id_category" [value]="item2.id">{{item2.name}}</option>
+                </ng-container>
+              </optgroup>
+            </select>
+            <div  class="invalid-feedback">
+              Entrez un ingrédient
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group " [ngClass]="getValidform(item+'Q')">
+              <input class="form-control" formControlName="{{item}}Q" type="number" [ngClass]="getValidform(item+'Q')" placeholder="Quantité"/>
+              <span class="input-group-text" *ngIf="getUnit(item)!=''">({{getUnit(item)}})</span>
+            </div>
+            <div  class="invalid-feedback">
+              Entrez une quantité
+            </div>
+
+          </div>
+          <div class="col-md-auto">
+            <button class="btn btn-outline-danger" (click)="deleteIngredient(item)" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#dc3545">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+              </svg>
+            </button>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <button class="btn btn-primary" (click)="ajoutIngredient()" type="button">Ajouter un ingrédient</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" data-bs-dismiss="modal" data-bs-toggle="modal" href="#creerIngredient"
+                type="button">Créer un ingrédient
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" [disabled]="!form.valid"
+                type="submit">{{updateModal ? "Mettre à jour" : "Créer"}}</button>
+      </div>
+    </form>
+
+
+  </div>
+</div>
+
+

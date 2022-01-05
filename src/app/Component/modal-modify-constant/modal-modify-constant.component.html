@@ -1,0 +1,47 @@
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Mettre à jour les paramètres de l'application</h4><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form style="padding: 12px;" [formGroup]="form" (ngSubmit)="validate()">
+      <div class="modal-body">
+
+        <div class="form-floating mb-3">
+          <input class="form-control" type="number" formControlName="coutPersonnel" id="floatingInput1" placeholder="Coût du personnel (€/heure)" />
+          <label for="floatingInput1">Coût du personnel (€/heure)</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input class="form-control" type="number" formControlName="coutFluide" id="floatingInput2" placeholder="Coût des fluides (€/heure)" />
+          <label for="floatingInput2">Coût des fluides (€/heure)</label>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="form-floating">
+              <input class="form-control" type="number" formControlName="coutAssaisonement" id="floatingInput3" min="0" placeholder="Coût d'assaisonnement par défaut" />
+              <label for="floatingInput3">Coût d'assaisonnement par défaut (En {{this.form.get('typeAssaisonement')!.value==1?"%":"€"}})</label>
+            </div>
+
+          </div>
+          <div class="col-auto align-self-center">
+            <input class="form-check-input" type="radio" name="typeAssaisonement" formControlName="typeAssaisonement"  [value]="1" > %
+            <input class="form-check-input" type="radio" name="typeAssaisonement" formControlName="typeAssaisonement" [value]="0">€
+
+          </div>
+        </div>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-toggle="modal" type="submit">Mettre à jour</button>
+      </div>
+    </form>
+
+
+  </div>
+</div>
+
+
