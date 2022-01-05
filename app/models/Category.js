@@ -1,5 +1,5 @@
 const path = require('path');
-const db =require(path.join(__dirname, '../../../Back/BDD'));
+const db =require(path.join(__dirname, '../../BDD'));
 
 //Valeur possible A_Category I_Category R_Category
 function createCategory(category,nom,url){

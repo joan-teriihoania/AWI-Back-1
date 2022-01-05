@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const path = require("path");
-const modelStep=require(path.join(__dirname,"../../Back/app/models/Step"))
+const modelStep=require(path.join(__dirname,"../app/models/Step"))
 
 
 router.post("/createStep",(req,res)=>{

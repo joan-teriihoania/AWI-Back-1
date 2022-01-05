@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const path = require("path");
-const modelAllergen=require(path.join(__dirname,"../../Back/app/models/Allergen"))
+const modelAllergen=require(path.join(__dirname,"../app/models/Allergen"))
 
 
 router.post("/createAllergen",(req,res)=>{

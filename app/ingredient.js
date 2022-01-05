@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router();
 const path = require("path");
-const modelIngredient=require(path.join(__dirname,"../../Back/app/models/Ingredient"))
+const modelIngredient=require(path.join(__dirname,"../app/models/Ingredient"))
 
 
 

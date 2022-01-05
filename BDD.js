@@ -1,20 +1,18 @@
 /**
  * Ce fichier gère la connexion à la base de donnée
  */
-const path=require("path")
 const mysql = require('mysql');
-const dbConfig = require(path.join(__dirname,"app/config/db.config"));
 
 /*
  * Création d'une instance pour communiquer avec la base de données
  */
 
 let db = mysql.createConnection({
-  host: dbConfig.HOST,
-  user: dbConfig.USERNAME,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.NAME,
-  timezone: dbConfig.TIMEZONE,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  timezone: process.env.DB_TIMEZONE,
 });
 
 db.connect(function(err) {
