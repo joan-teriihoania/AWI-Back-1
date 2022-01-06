@@ -3,7 +3,7 @@ const db =require(path.join(__dirname, '../../BDD'));
 
 function getDefaultCost() {
   return new Promise((resolve, reject) => {
-      let sql = "Select  COUT_FLUIDE, COUT_PERSONNEL,COUT_ASSAISONNEMENT, ISPERCENT From Cost WHERE ID = 0";
+      let sql = "Select  COUT_FLUIDE, COUT_PERSONNEL,COUT_ASSAISONNEMENT, ISPERCENT, MARGE From Cost WHERE ID = 0";
       db.query(sql, (err, result) => {
         if (err) {
           reject(err);
@@ -17,7 +17,7 @@ function getDefaultCost() {
 
 function setDefaultCost(newCost) {
   return new Promise((resolve, reject) => {
-      let sql = "UPDATE Cost SET COUT_FLUIDE = ?, COUT_PERSONNEL = ? , COUT_ASSAISONNEMENT = ?,ISPERCENT = ? WHERE ID = 0 ;";
+      let sql = "UPDATE Cost SET COUT_FLUIDE = ?, COUT_PERSONNEL = ? , COUT_ASSAISONNEMENT = ?,ISPERCENT = ?, MARGE= ? WHERE ID = 0 ;";
       db.query(sql, newCost, (err) => {
         if (err) {
           reject(err);

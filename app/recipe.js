@@ -21,7 +21,7 @@ router.get("/getCost", (req, res) => {
 
 router.put("/setCost",(req,res)=>{
 
-  modelRecipe.setDefaultCost([req.body.COUT_FLUIDE, req.body.COUT_PERSONNEL ,req.body.COUT_ASSAISONEMENT,req.body.ISPERCENT]).then(()=>{
+  modelRecipe.setDefaultCost([req.body.COUT_FLUIDE, req.body.COUT_PERSONNEL ,req.body.COUT_ASSAISONEMENT,req.body.ISPERCENT,req.body.MARGE]).then(()=>{
     res.status(200).end();
   }).catch((err) => {
       console.log(err)
