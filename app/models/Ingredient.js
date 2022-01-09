@@ -5,7 +5,6 @@ const db =require(path.join(__dirname, '../../BDD'));
 function create(data){
   return new Promise((resolve,reject) =>{
       let sql="INSERT INTO `Ingredient`(NAME,UNIT,UNIT_PRICE,ID_Category,STOCK,ID_ALLERGEN) VALUES (?,?,?,?,?,?);";
-      let ID;
       db.query(sql,data,(err,res)=>{
         if (err) {
           reject(err);
@@ -31,7 +30,6 @@ function update(data){
 }
 function updateStock(data){
   return new Promise((resolve,reject) =>{
-        let sql="UPDATE `Ingredient`SET STOCK=? WHERE ID_INGREDIENT=?";
       db.beginTransaction(function (err) {
           if (err) {
               throw err;
@@ -53,8 +51,6 @@ function updateStock(data){
               }
               resolve("Done")
           });
-
-
       })
   }
   )
