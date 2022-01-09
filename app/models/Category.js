@@ -9,14 +9,7 @@ function createCategory(category,nom,url){
         if (err) {
           reject(err);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM "+category+" ;",(err,result)=>{
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          })
-
+            resolve(result.insertId)
         }
       })
     }

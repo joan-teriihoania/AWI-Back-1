@@ -51,6 +51,17 @@ router.post("/deleteIngredient",(req,res)=>{
   });
 
 })
+router.put("/updateStock",(req,res)=> {
+
+  modelIngredient.updateStock(req.body)
+    .catch((e)=>{
+      console.log(e);
+      res.status(400).end();
+    });
+
+  res.status(201).end();
+})
+
 
 
 

@@ -5,17 +5,11 @@ const db =require(path.join(__dirname, '../../BDD'));
 function create(name,id_Category){
   return new Promise((resolve,reject) =>{
       let sql="INSERT INTO `Allergen`(NAME,ID_Category) VALUES (?,?);";
-      db.query(sql,[name,id_Category],(err1)=>{
+      db.query(sql,[name,id_Category],(err1,result)=>{
         if (err1) {
           reject(err1);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM Allergen; ",(err2,result)=>{
-            if (err2) {
-              reject(err2);
-            } else {
-              resolve(result);
-            }
-          })
+            resolve(result.insertId)
 
         }
       })

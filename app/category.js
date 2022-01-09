@@ -21,7 +21,7 @@ router.get("/getCategory/:type",(req,res)=>{
 router.post("/createCategory/:type",(req,res)=>{
   if(req.params.type=="I_Category"||req.params.type=="A_Category"||req.params.type=="R_Category"){
     modelCategory.createCategory(req.params.type,req.body.NAME,req.body.URL).then((result)=>{
-      res.json(JSON.parse(JSON.stringify(result))[0]);
+      res.json(result);
       res.status(201).end();
     }).catch((e)=>{
       console.log(e);

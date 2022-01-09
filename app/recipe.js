@@ -45,8 +45,11 @@ router.put("/updateRecipe",(req,res)=>{
       res.status(201).end();
     }
   ).catch((e)=>{
-    console.log(e);
-    res.status(400).end();
+      console.log(e);
+      if(e==409)
+          res.status(409).end();
+      else
+        res.status(400).end();
   });
 })
 router.post("/deleteRecipe",(req,res)=>{
@@ -86,14 +89,9 @@ router.get("/getAllRecipe", (req, res) => {
 router.get("/getRecipeById/:id",(req,res)=>{
 
   modelRecipe.getRecipById(req.params.id).then((result) => {
-      let json = JSON.parse(JSON.stringify(result))
-      let cpt = 0;
-      for (let item of json) {
-        json[cpt].INGREDIENT = JSON.parse(JSON.parse(JSON.stringify(item.INGREDIENT)));
-        cpt++;
-      }
+      console.log(result)
 
-      res.json(JSON.parse(JSON.stringify(json)));
+      res.json(result);
       res.status(201).end();
     }
   ).catch((e) => {

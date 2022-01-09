@@ -6,20 +6,11 @@ function create(data){
   return new Promise((resolve,reject) =>{
       let sql="INSERT INTO `Ingredient`(NAME,UNIT,UNIT_PRICE,ID_Category,STOCK,ID_ALLERGEN) VALUES (?,?,?,?,?,?);";
       let ID;
-      db.query(sql,data,(err)=>{
+      db.query(sql,data,(err,res)=>{
         if (err) {
           reject(err);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM Ingredient; ",(err,result)=>{
-            if (err) {
-              reject(err);
-            } else {
-              ID=JSON.parse(JSON.stringify(result))[0].ID_INGREDIENT;
-              resolve(ID);
-
-            }
-          })
-
+            resolve(res.insertId)
         }
       })
     }
@@ -28,24 +19,44 @@ function create(data){
 function update(data){
   return new Promise((resolve,reject) =>{
       let sql="UPDATE `Ingredient`SET NAME = ?,UNIT=?,UNIT_PRICE=?,ID_Category=?,STOCK=?,ID_ALLERGEN=? WHERE ID_INGREDIENT=?";
-      let ID;
       db.query(sql,data,(err)=>{
         if (err) {
           reject(err);
         } else {
-          db.query("SELECT LAST_INSERT_ID() AS ID FROM Ingredient; ",(err,result)=>{
-            if (err) {
-              reject(err);
-            } else {
-              ID=JSON.parse(JSON.stringify(result))[0].ID_INGREDIENT;
-              resolve(ID);
-
-            }
-          })
-
+          resolve("Done")
         }
       })
     }
+  )
+}
+function updateStock(data){
+  return new Promise((resolve,reject) =>{
+        let sql="UPDATE `Ingredient`SET STOCK=? WHERE ID_INGREDIENT=?";
+      db.beginTransaction(function (err) {
+          if (err) {
+              throw err;
+          }
+          for (let item of data) {
+              db.query("UPDATE `Ingredient`SET STOCK=? WHERE ID_INGREDIENT=?", [item.QUANTITY, item.ID], function (error, results, fields) {
+                  if (error) {
+                      return db.rollback(function () {
+                          throw error;
+                      });
+                  }
+              })
+          }
+          db.commit(function (err) {
+              if (err) {
+                  return db.rollback(function () {
+                      throw err;
+                  });
+              }
+              resolve("Done")
+          });
+
+
+      })
+  }
   )
 }
 function getAll(){
@@ -83,4 +94,4 @@ function deleteI(ID){
     }
   )
 }
-module.exports={create,deleteI,getAll,update}
+module.exports={create,deleteI,getAll,update,updateStock}
